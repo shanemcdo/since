@@ -23,6 +23,11 @@ function start_counting(){
     window.location.search = `name=${els.name_in.value}&date=${now.valueOf()}`;
 }
 
+function reset_count(){
+    const now = new Date();
+    window.location.search = `name=${els.name_out.innerHTML}&date=${now.valueOf()}`;
+}
+
 function main(){
     if(window.location.search == '') return;
     els.in_div.classList.add('hidden');
@@ -36,6 +41,7 @@ function main(){
             get[key] = val;
         });
     els.name_out.innerHTML = get.name;
+    document.title = `since "${get.name}"`;
     const date = new Date(parseInt(get.date));
     setInterval(() => {
         const now = new Date();

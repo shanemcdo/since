@@ -16,3 +16,11 @@ body{
 .hidden{
     display: none;
 }
+
+a{
+    color: #cc5dfb;
+}
+
+a:visited{
+    color: #905dfb;
+}

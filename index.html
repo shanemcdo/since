@@ -13,15 +13,20 @@
         <div id="in">
             <h1>Since</h1>
             <p>Start counting time since a button press. Bookmark the created page to save the counter.</p>
-            <label for="name">Name</label>
-            <br>
-            <input type="text" value="" name="name" id="name-in"/>
-            <br>
-            <button onclick="start_counting()">Start Counting</button>
+            <form action="javascript:start_counting()">
+                <label for="name">Name</label>
+                <br>
+                <input type="text" value="" name="name" id="name-in"/>
+                <br>
+                <button type="submit">Start Counting</button>
+            </form>
         </div>
         <div class="hidden" id="out">
             <h1 id="name-out"></h1>
             <p id="date-out"></p>
+            <button onclick="reset_count()">Reset Count</button>
+            <br>
+            <a href="/">Home Site</a>
         </div>
     </body>
 </html>
