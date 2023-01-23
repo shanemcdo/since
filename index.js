@@ -45,11 +45,13 @@ function main(){
             secs: Math.floor(diff / 1000) % 60,
             mins: Math.floor(diff / 1000 / 60) % 60,
             hrs: Math.floor(diff / 1000 / 60 / 60) % 24,
-            days: Math.floor(diff / 1000 / 60 / 60 / 24) % 365,
-            years: Math.floor(diff / 1000 / 60 / 60 / 24 / 365),
+            days: Math.floor(diff / 1000 / 60 / 60 / 24) % 7,
+            weeks: Math.floor(diff / 1000 / 60 / 60 / 24 / 7) % 52,
+            years: Math.floor(diff / 1000 / 60 / 60 / 24 / 7 / 52),
         };
         const time_strings = [];
         if(time.years > 0) time_strings.push(`${time.years} years`);
+        if(time.weeks > 0) time_strings.push(`${time.weeks} weeks`);
         if(time.days > 0) time_strings.push(`${time.days} days`);
         if(time.hrs > 0) time_strings.push(`${time.hrs} hours`);
         if(time.mins > 0) time_strings.push(`${time.mins} minutes`);
