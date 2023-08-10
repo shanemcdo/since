@@ -33,13 +33,6 @@ function main(){
     els.in_div.classList.add('hidden');
     els.out_div.classList.remove('hidden');
     const get = parse_search();
-    window.location.search
-        .split(/&|\?/)
-        .filter(x => x)
-        .forEach(x => {
-            let [key, val] = x.split('=').map(decodeURIComponent);
-            get[key] = val;
-        });
     els.name_out.innerHTML = get.name;
     document.title = `since "${get.name}"`;
     const date = new Date(parseInt(get.date));
