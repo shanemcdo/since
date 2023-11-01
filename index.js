@@ -28,6 +28,10 @@ function reset_count(){
     window.location.search = `name=${els.name_out.innerHTML}&date=${now.valueOf()}`;
 }
 
+function get_time_string(time, unit){
+    return `${time} ${unit}${time === 1 ? '' : 's'}`;
+}
+
 function main(){
     if(window.location.search == '') return;
     els.in_div.classList.add('hidden');
@@ -37,26 +41,20 @@ function main(){
     document.title = `since "${get.name}"`;
     const date = new Date(parseInt(get.date));
     setInterval(() => {
-        const now = new Date();
-        const diff = now - date;
+        const diff = new Date() - date;
         const time = {
-            ms: diff % 1000,
-            secs: Math.floor(diff / 1000) % 60,
-            mins: Math.floor(diff / 1000 / 60) % 60,
-            hrs: Math.floor(diff / 1000 / 60 / 60) % 24,
-            days: Math.floor(diff / 1000 / 60 / 60 / 24) % 7,
-            weeks: Math.floor(diff / 1000 / 60 / 60 / 24 / 7) % 52,
-            years: Math.floor(diff / 1000 / 60 / 60 / 24 / 7 / 52),
+            year: Math.floor(diff / 1000 / 60 / 60 / 24 / 7 / 52),
+            week: Math.floor(diff / 1000 / 60 / 60 / 24 / 7) % 52,
+            day: Math.floor(diff / 1000 / 60 / 60 / 24) % 7,
+            hour: Math.floor(diff / 1000 / 60 / 60) % 24,
+            minute: Math.floor(diff / 1000 / 60) % 60,
+            second: Math.floor(diff / 1000) % 60,
+            milisecond: diff % 1000,
         };
-        const time_strings = [];
-        if(time.years > 0) time_strings.push(`${time.years} years`);
-        if(time.weeks > 0) time_strings.push(`${time.weeks} weeks`);
-        if(time.days > 0) time_strings.push(`${time.days} days`);
-        if(time.hrs > 0) time_strings.push(`${time.hrs} hours`);
-        if(time.mins > 0) time_strings.push(`${time.mins} minutes`);
-        if(time.secs > 0) time_strings.push(`${time.secs} seconds`);
-        if(time.ms > 0) time_strings.push(`${time.ms} miliseconds`);
-        els.date_out.innerHTML = time_strings.join('<br>');
+        els.date_out.innerHTML = Object.entries(time)
+            .filter(([_, value]) => value !== 0)
+            .map(([unit, value]) => get_time_string(value, unit))
+            .join('<br>');
     }, 100);
 }
 
