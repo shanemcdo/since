@@ -7,15 +7,13 @@ const els = {
 };
 
 function parse_search(){
-    const get = {};
-    window.location.search
+    return window.location.search
         .split(/&|\?/)
         .filter(x => x)
-        .forEach(x => {
-            let [key, val] = x.split('=').map(decodeURIComponent);
-            get[key] = val;
-        });
-    return get;
+        .reduce((accum, x) => {
+            const [key, val] = x.split('=').map(decodeURIComponent)
+            return {...accum, [key]: val};
+        }, {});
 }
 
 function start_counting(){
@@ -33,7 +31,7 @@ function get_time_string(time, unit){
 }
 
 function main(){
-    if(window.location.search == '') return;
+    if(window.location.search === '') return;
     els.in_div.classList.add('hidden');
     els.out_div.classList.remove('hidden');
     const get = parse_search();
