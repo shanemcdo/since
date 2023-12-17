@@ -1,4 +1,5 @@
 const createRemoveBookmarkButton = document.getElementById('create-remove-bookmark');
+const resetButton = document.getElementById('reset-button');
 createRemoveBookmarkButton.classList.remove('hidden');
 
 let bookmarkId = null
@@ -33,3 +34,10 @@ function setUpButton(hasBookmark) {
 }
 
 hasBookmark().then(setUpButton);
+previousOnclick = resetButton.onclick;
+resetButton.onclick = async () => {
+	if(await hasBookmark()) {
+		await chrome.runtime.sendMessage({ type: 'update', id: bookmarkId });
+	}
+	previousOnclick();
+}

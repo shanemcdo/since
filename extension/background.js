@@ -15,7 +15,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			break;
 	case 'create':
 			createBookmark(new URL(request.url)).then(bookmark => sendResponse(bookmark.id));
-			break
+			break;
+	case 'update':
+			chrome.bookmarks.get(request.id, bookmark => {
+				const url = new URL(bookmark.url);
+				url.searchParams.set('date', Date.now());
+				chrome.bookmarks.update(request.id, { url: url.toString() });
+			})
+			break;
 	default:
 		throw new Error(`Invalid request type ${type}`);
 	}
