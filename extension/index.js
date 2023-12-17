@@ -79,7 +79,8 @@ els.timerNameInput.addEventListener('keydown', event => {
 });
 
 chrome.bookmarks.search({ query: BASE_URL }, results => {
-	results.toSorted()
+	results
+		.toSorted((a, b) => a.url < b.url ? -1 : 1)
 		.map(result => [result.id, new URL(result.url)])
 		.forEach(addTimerToList);
 });
