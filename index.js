@@ -9,13 +9,13 @@ const els = {
 const url = new URL(window.location);
 
 function start_counting(){
-    url.searchParam.set('name', els.name_in.value);
-    url.searchParam.set('date', Date.now());
+    url.searchParams.set('name', els.name_in.value);
+    url.searchParams.set('date', Date.now());
     window.location.search = url.search;
 }
 
 function reset_count(){
-    url.searchParam.set('date', Date.now());
+    url.searchParams.set('date', Date.now());
     window.location.search = url.search;
 }
 
@@ -26,12 +26,11 @@ function get_time_string(time, unit){
 function main(){
     if(url.search === '') return;
     const name = url.searchParams.get('name');
-    const date = url.searchParams.get('date');
     els.in_div.classList.add('hidden');
     els.out_div.classList.remove('hidden');
     els.name_out.innerHTML = name;
     document.title = `since "${name}"`;
-    const date = new Date(parseInt(date));
+    const date = new Date(parseInt(url.searchParams.get('date')));
     setInterval(() => {
         const diff = new Date() - date;
         const time = {
