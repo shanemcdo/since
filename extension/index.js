@@ -23,7 +23,7 @@ function msToHuman(ms) {
 };
 
 chrome.bookmarks.search({ query: 'shanemcd.net/since/' }, results => {
-	for(const result of results) {
+	results.toSorted().forEach(result => {
 		let url = new URL(result.url);
 		const li = newEl('li');
 		const title = newEl('a');
@@ -48,5 +48,5 @@ chrome.bookmarks.search({ query: 'shanemcd.net/since/' }, results => {
 		};
 		li.appendChild(resetButton);
 		bookmarkList.appendChild(li);
-	}
+	});
 });
