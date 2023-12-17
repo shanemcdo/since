@@ -1,7 +1,9 @@
 const newEl = tag => document.createElement(tag);
-const bookmarkList = document.getElementById('bookmarkList');
+const bookmarkList = document.getElementById('bookmark-list');
+const timerNameInput = document.getElementById('timer-name');
+const newTimerButton = document.getElementById('new-timer-button');
 
-
+const BASE_URL = 'shanemcd.net/since/';
 const SECOND = 1000;
 const MINUTE = 60  * SECOND;
 const HOUR   = 60  * MINUTE;
@@ -22,32 +24,55 @@ function msToHuman(ms) {
 	return `${ms} Miliseconds`
 };
 
-chrome.bookmarks.search({ query: 'shanemcd.net/since/' }, results => {
+function addTimerToList([id, url]) {
+	const li = newEl('li');
+	const title = newEl('a');
+	title.innerText = url.searchParams.get('name');
+	title.href = url;
+	title.target = '_blank';
+	li.appendChild(title);
+	const date = newEl('span');
+	const interval = setInterval(() => {
+		const diff = Date.now() - url.searchParams.get('date');
+		date.innerText = msToHuman(diff);
+	}, 50);
+	li.appendChild(date);
+	const resetButton = newEl('button');
+	resetButton.innerText = 'Reset';
+	resetButton.onclick = () => {
+		url.searchParams.set('date', Date.now());
+		chrome.bookmarks.update(
+			id,
+			{ url: url.toString() }
+		);
+	};
+	li.appendChild(resetButton);
+	const removeButton = newEl('button');
+	removeButton.innerText = 'Remove';
+	removeButton.onclick = () => {
+		clearInterval(interval);
+		bookmarkList.removeChild(li);
+		chrome.bookmarks.remove(id);
+	};
+	li.appendChild(removeButton);
+	bookmarkList.appendChild(li);
+}
+
+
+async function newTimer() {
+	const url = new URL('https://' + BASE_URL);
+	url.searchParams.set('name', timerNameInput.value);
+	url.searchParams.set('date', Date.now());
+	const bookmark = await chrome.bookmarks.create({
+		url: url.toString(),
+		title: `since "${url.searchParams.get('name')}"`
+	});
+	addTimerToList([bookmark.id, url]);
+}
+
+chrome.bookmarks.search({ query: BASE_URL }, results => {
 	results.toSorted()
-		.map(result => new URL(result.url))
-		.forEach(url => {
-			const li = newEl('li');
-			const title = newEl('a');
-			title.innerText = url.searchParams.get('name');
-			title.href = url;
-			title.target = '_blank';
-			li.appendChild(title);
-			const date = newEl('span');
-			setInterval(() => {
-				const diff = Date.now() - url.searchParams.get('date');
-				date.innerText = msToHuman(diff);
-			}, 50);
-			li.appendChild(date);
-			const resetButton = newEl('button');
-			resetButton.innerText = 'reset';
-			resetButton.onclick = () => {
-				url.searchParams.set('date', Date.now());
-				chrome.bookmarks.update(
-					result.id,
-					{ url: url.toString() }
-				);
-			};
-			li.appendChild(resetButton);
-			bookmarkList.appendChild(li);
-		});
+		.map(result => [result.id, new URL(result.url)])
+		.forEach(addTimerToList);
 });
+newTimerButton.onclick = newTimer;

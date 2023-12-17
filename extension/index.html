@@ -5,10 +5,18 @@
 		<meta name="viewport" content="width=device-width" />
 		<title>Since Bookmark Handler Extension</title>
 		<link rel="stylesheet" href="index.css" type="text/css" media="all">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" type="text/css" rel="stylesheet">
 		<script src="index.js" charset="utf-8" type="module" defer></script>
 	</head>
 	<body>
-		<h1>Since Bookmarks</h1>
-		<ul id="bookmarkList"></ul>
+		<div class="pair">
+			<h1>Since Bookmarks</h1>
+			<a href="https://shanemcd.net/since/" target="_blank" id="home-link"><i class="fa-solid fa-house"></i></a>
+		</div>
+		<ul id="bookmark-list"></ul>
+		<div class="center-child">
+			<input type="text"  id="timer-name" placeholder="Timer Name" />
+			<button id="new-timer-button">New Timer</button>
+		</div>
 	</body>
 </html>

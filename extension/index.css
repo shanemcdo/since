@@ -17,7 +17,7 @@ body {
 
 li {
 	display: grid;
-	grid-template-columns: 3fr 2fr 1fr;
+	grid-template-columns: 3fr 2fr 1fr 1fr;
 }
 
 button {
@@ -30,4 +30,27 @@ a {
 
 a:visited {
 	color var(--fg-accent-dark);
+}
+
+.center-child {
+	display: flex;
+	justify-content: center;
+}
+
+.pair * {
+	display: inline;
+}
+
+.pair :last-child {
+	float: right;
+}
+
+#home-link {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#new-link {
+	text-align: center;
 }
