@@ -32,6 +32,4 @@ function setUpButton(hasBookmark) {
 	}
 }
 
-(async () => {
-	setUpButton(await hasBookmark())
-})();
+hasBookmark().then(setUpButton);
