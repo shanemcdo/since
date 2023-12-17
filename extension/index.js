@@ -23,30 +23,31 @@ function msToHuman(ms) {
 };
 
 chrome.bookmarks.search({ query: 'shanemcd.net/since/' }, results => {
-	results.toSorted().forEach(result => {
-		let url = new URL(result.url);
-		const li = newEl('li');
-		const title = newEl('a');
-		title.innerText = url.searchParams.get('name');
-		title.href = result.url;
-		title.target = '_blank';
-		li.appendChild(title);
-		const date = newEl('span');
-		setInterval(() => {
-			const diff = Date.now() - url.searchParams.get('date');
-			date.innerText = msToHuman(diff);
-		}, 50);
-		li.appendChild(date);
-		const resetButton = newEl('button');
-		resetButton.innerText = 'reset';
-		resetButton.onclick = () => {
-			url.searchParams.set('date', Date.now());
-			chrome.bookmarks.update(
-				result.id,
-				{ url: url.toString() }
-			);
-		};
-		li.appendChild(resetButton);
-		bookmarkList.appendChild(li);
-	});
+	results.toSorted()
+		.map(result => new URL(result.url))
+		.forEach(url => {
+			const li = newEl('li');
+			const title = newEl('a');
+			title.innerText = url.searchParams.get('name');
+			title.href = url;
+			title.target = '_blank';
+			li.appendChild(title);
+			const date = newEl('span');
+			setInterval(() => {
+				const diff = Date.now() - url.searchParams.get('date');
+				date.innerText = msToHuman(diff);
+			}, 50);
+			li.appendChild(date);
+			const resetButton = newEl('button');
+			resetButton.innerText = 'reset';
+			resetButton.onclick = () => {
+				url.searchParams.set('date', Date.now());
+				chrome.bookmarks.update(
+					result.id,
+					{ url: url.toString() }
+				);
+			};
+			li.appendChild(resetButton);
+			bookmarkList.appendChild(li);
+		});
 });
