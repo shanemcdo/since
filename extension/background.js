@@ -17,10 +17,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			createBookmark(new URL(request.url)).then(bookmark => sendResponse(bookmark.id));
 			break;
 	case 'update':
-			chrome.bookmarks.get(request.id, bookmark => {
-				const url = new URL(bookmark.url);
-				url.searchParams.set('date', Date.now());
-				chrome.bookmarks.update(request.id, { url: url.toString() });
+			chrome.bookmarks.get(request.id, ([bookmark]) => {
+				chrome.bookmarks.update(request.id, { url: request.url });
+				sendResponse(null);
 			})
 			break;
 	default:

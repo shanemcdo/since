@@ -14,9 +14,10 @@ async function hasBookmark() {
 	return false;
 }
 
-function removeBookmark() {
+async function removeBookmark() {
 	if(bookmarkId === null) return;
-	chrome.runtime.sendMessage({ type: 'remove', id: bookmarkId });
+	await chrome.runtime.sendMessage({ type: 'remove', id: bookmarkId });
+	bookmarkId = null;
 	setUpButton(false);
 }
 
@@ -36,8 +37,11 @@ function setUpButton(hasBookmark) {
 hasBookmark().then(setUpButton);
 previousOnclick = resetButton.onclick;
 resetButton.onclick = async () => {
+	let url = new URL(window.location);
+	url.searchParams.set('date', Date.now());
+	url = url.toString();
 	if(await hasBookmark()) {
-		await chrome.runtime.sendMessage({ type: 'update', id: bookmarkId });
+		await chrome.runtime.sendMessage({ type: 'update', id: bookmarkId, url });
 	}
-	previousOnclick();
+	window.location = url;
 }
