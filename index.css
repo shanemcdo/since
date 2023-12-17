@@ -12,14 +12,23 @@ html{
     text-align: center;
 }
 
-.hidden{
-    display: none;
-}
-
 a{
     color: #cc5dfb;
 }
 
 a:visited{
     color: #905dfb;
+}
+
+.hidden{
+    display: none;
+}
+
+.center-child {
+    display: flex;
+    justify-content: center;
+}
+
+#in {
+    max-width: 500px;
 }

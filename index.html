@@ -11,23 +11,28 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div id="in">
-            <h1>Since</h1>
-            <p>Start counting time since a button press. Bookmark the created page to save the counter.</p>
-            <form action="javascript:startCounting()">
-                <label for="name">Name</label>
+        <div class="center-child">
+            <div id="in">
+                <h1>Since</h1>
+                <p>
+                This site serves as a way of tracking how much time has passed <i>since</i> an event has occured.
+                You can use it to track days since last workplace accident.
+                You can use it as an addiction tracker.
+                Simply bookmark this page and update the bookmark whenever you reset the count.
+                <!-- TODO get on extension store and link install -->
+                </p>
+                <form action="javascript:startCounting()">
+                    <input type="text" id="name-in" placeholder="Name" required/>
+                    <button type="submit">Start Counting</button>
+                </form>
+            </div>
+            <div class="hidden" id="out">
+                <h1 id="name-out"></h1>
+                <p id="date-out"></p>
+                <button onclick="resetCount()">Reset Count</button>
                 <br>
-                <input type="text" value="" name="name" id="name-in" required/>
-                <br>
-                <button type="submit">Start Counting</button>
-            </form>
-        </div>
-        <div class="hidden" id="out">
-            <h1 id="name-out"></h1>
-            <p id="date-out"></p>
-            <button onclick="resetCount()">Reset Count</button>
-            <br>
-            <a href="./">Home Site</a>
+                <a href="./">Home Site</a>
+            </div>
         </div>
     </body>
 </html>
