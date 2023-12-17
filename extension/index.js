@@ -77,3 +77,5 @@ chrome.bookmarks.search({ query: BASE_URL }, results => {
 		.map(result => [result.id, new URL(result.url)])
 		.forEach(addTimerToList);
 });
+
+// TODO do something that injects js into the shanemcd.net/since/ site that adds, updates, and deletes bookmark
