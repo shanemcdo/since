@@ -1,27 +1,22 @@
 const newEl = tag => document.createElement(tag);
-const bookmarkList = document.getElementById('bookmark-list');
-const timerNameInput = document.getElementById('timer-name');
-const newTimerButton = document.getElementById('new-timer-button');
+const els = {
+	bookmarkList: document.getElementById('bookmark-list'),
+	timerNameInput: document.getElementById('timer-name'),
+	newTimerButton: document.getElementById('new-timer-button'),
+};
 
 const BASE_URL = 'shanemcd.net/since/';
-const SECOND = 1000;
-const MINUTE = 60  * SECOND;
-const HOUR   = 60  * MINUTE;
-const DAY    = 24  * HOUR;
-const WEEK   = 7   * DAY;
-const MONTH  = 31  * DAY;
-const YEAR   = 365 * DAY
 
 function msToHuman(ms) {
 	const calc = (ms, unit) => (ms / unit).toFixed(1);
-	if(ms > YEAR) return `${calc(ms, YEAR)} Years`;
-	if(ms > MONTH) return `${calc(ms, MONTH)} Months`;
-	if(ms > WEEK) return `${calc(ms, WEEK)} Weeks`;
-	if(ms > DAY) return `${calc(ms, DAY)} Days`;
-	if(ms > HOUR) return `${calc(ms, HOUR)} Hours`;
-	if(ms > MINUTE) return `${calc(ms, MINUTE)} Minutes`;
-	if(ms > SECOND) return `${calc(ms, SECOND)} Seconds`;
-	return `${ms} Miliseconds`
+	if(ms > YEAR) return getTimeString(calc(ms, YEAR), 'Year');
+	if(ms > MONTH) return getTimeString(calc(ms, MONTH), 'Month');
+	if(ms > WEEK) return getTimeString(calc(ms, WEEK), 'Week');
+	if(ms > DAY) return getTimeString(calc(ms, DAY), 'Day');
+	if(ms > HOUR) return getTimeString(calc(ms, HOUR), 'Hour');
+	if(ms > MINUTE) return getTimeString(calc(ms, MINUTE), 'Minute');
+	if(ms > SECOND) return getTimeString(calc(ms, SECOND), 'Second');
+	return getTimeString(ms, 'Milisecond');
 };
 
 function addTimerToList([id, url]) {
@@ -51,29 +46,29 @@ function addTimerToList([id, url]) {
 	removeButton.innerText = 'Remove';
 	removeButton.onclick = () => {
 		clearInterval(interval);
-		bookmarkList.removeChild(li);
+		els.bookmarkList.removeChild(li);
 		chrome.bookmarks.remove(id);
 	};
 	li.appendChild(removeButton);
-	bookmarkList.appendChild(li);
+	els.bookmarkList.appendChild(li);
 }
 
-newTimerButton.onclick = async () => {
-	if(timerNameInput.value === '') return;
+els.newTimerButton.onclick = async () => {
+	if(els.timerNameInput.value === '') return;
 	const url = new URL('https://' + BASE_URL);
-	url.searchParams.set('name', timerNameInput.value);
+	url.searchParams.set('name', els.timerNameInput.value);
 	url.searchParams.set('date', Date.now());
 	const bookmark = await chrome.bookmarks.create({
 		url: url.toString(),
 		title: `since "${url.searchParams.get('name')}"`
 	});
 	addTimerToList([bookmark.id, url]);
-	timerNameInput.value = '';
+	els.timerNameInput.value = '';
 };
 
-timerNameInput.addEventListener('keydown', event => {
+els.timerNameInput.addEventListener('keydown', event => {
 	if(event.keyCode == 13) { // Enter 
-		newTimerButton.click();
+		els.newTimerButton.click();
 	}
 });
 

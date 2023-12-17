@@ -19,10 +19,6 @@ function resetCount(){
     window.location.search = url.search;
 }
 
-function getTimeString(time, unit){
-    return `${time} ${unit}${time === 1 ? '' : 's'}`;
-}
-
 function main(){
     if(url.search === '') return;
     const name = url.searchParams.get('name');
@@ -34,13 +30,13 @@ function main(){
     setInterval(() => {
         const diff = new Date() - date;
         const time = {
-            year: Math.floor(diff / 1000 / 60 / 60 / 24 / 7 / 52),
-            week: Math.floor(diff / 1000 / 60 / 60 / 24 / 7) % 52,
-            day: Math.floor(diff / 1000 / 60 / 60 / 24) % 7,
-            hour: Math.floor(diff / 1000 / 60 / 60) % 24,
-            minute: Math.floor(diff / 1000 / 60) % 60,
-            second: Math.floor(diff / 1000) % 60,
-            milisecond: diff % 1000,
+            year: Math.floor(diff / YEAR),
+            week: Math.floor(diff / WEEK) % 52,
+            day: Math.floor(diff / DAY) % 7,
+            hour: Math.floor(diff / HOUR) % 24,
+            minute: Math.floor(diff / MINUTE) % 60,
+            second: Math.floor(diff / SECOND) % 60,
+            milisecond: diff % SECOND,
         };
         els.dateOut.innerHTML = Object.entries(time)
             .filter(([, value]) => value !== 0)
