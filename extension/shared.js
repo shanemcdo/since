@@ -9,4 +9,3 @@ const YEAR   = 365 * DAY;
 function getTimeString(time, unit){
     return `${time} ${unit}${time === 1 || time === '1.0' ? '' : 's'}`;
 }
-

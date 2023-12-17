@@ -7,6 +7,13 @@ const els = {
 
 const BASE_URL = 'shanemcd.net/since/';
 
+async function createBookmark(url) {
+	return await chrome.bookmarks.create({
+		url: url.toString(),
+		title: `since "${url.searchParams.get('name')}"`
+	});
+};
+
 function msToHuman(ms) {
 	const calc = (ms, unit) => (ms / unit).toFixed(1);
 	if(ms > YEAR) return getTimeString(calc(ms, YEAR), 'Year');
@@ -58,10 +65,7 @@ els.newTimerButton.onclick = async () => {
 	const url = new URL('https://' + BASE_URL);
 	url.searchParams.set('name', els.timerNameInput.value);
 	url.searchParams.set('date', Date.now());
-	const bookmark = await chrome.bookmarks.create({
-		url: url.toString(),
-		title: `since "${url.searchParams.get('name')}"`
-	});
+	const bookmark = await createBookmark(url);
 	addTimerToList([bookmark.id, url]);
 	els.timerNameInput.value = '';
 };
@@ -77,5 +81,3 @@ chrome.bookmarks.search({ query: BASE_URL }, results => {
 		.map(result => [result.id, new URL(result.url)])
 		.forEach(addTimerToList);
 });
-
-// TODO do something that injects js into the shanemcd.net/since/ site that adds, updates, and deletes bookmark
