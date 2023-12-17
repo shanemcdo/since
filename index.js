@@ -6,25 +6,17 @@ const els = {
     out_div: document.querySelector('#out'),
 };
 
-function parse_search(){
-    return window.location.search
-        .split(/&|\?/)
-        .filter(x => x)
-        .reduce((accum, x) => {
-            const [key, val] = x.split('=').map(decodeURIComponent)
-            return {...accum, [key]: val};
-        }, {});
-}
+const url = new URL(window.location);
 
 function start_counting(){
-    const now = new Date();
-    
-    window.location.search = `name=${encodeURIComponent(els.name_in.value)}&date=${now.valueOf()}`;
+    url.searchParam.set('name', els.name_in.value);
+    url.searchParam.set('date', Date.now());
+    window.location.search = url.search;
 }
 
 function reset_count(){
-    const now = new Date();
-    window.location.search = `name=${encodeURIComponent(els.name_out.innerHTML)}&date=${now.valueOf()}`;
+    url.searchParam.set('date', Date.now());
+    window.location.search = url.search;
 }
 
 function get_time_string(time, unit){
@@ -32,13 +24,14 @@ function get_time_string(time, unit){
 }
 
 function main(){
-    if(window.location.search === '') return;
+    if(url.search === '') return;
+    const name = url.searchParams.get('name');
+    const date = url.searchParams.get('date');
     els.in_div.classList.add('hidden');
     els.out_div.classList.remove('hidden');
-    const get = parse_search();
-    els.name_out.innerHTML = get.name;
-    document.title = `since "${get.name}"`;
-    const date = new Date(parseInt(get.date));
+    els.name_out.innerHTML = name;
+    document.title = `since "${name}"`;
+    const date = new Date(parseInt(date));
     setInterval(() => {
         const diff = new Date() - date;
         const time = {
