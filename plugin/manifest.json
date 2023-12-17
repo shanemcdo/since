@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Since Bookmark Handler",
+  "description": "Update bookmarks that link to the since site with current datetimes",
+  "version": "1.0",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [ "bookmarks", "activeTab" ]
+}

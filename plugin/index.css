@@ -1,0 +1,33 @@
+html,
+body {
+	--bg: #222;
+	--fg: #eee;
+	--fg-accent: #aaf;
+	--fg-dark: #88d;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	padding: 1rem;
+	background: var(--bg);
+	color: var(--fg);
+	width: 25rem;
+}
+
+li {
+	display: grid;
+	grid-template-columns: 3fr 2fr 1fr;
+}
+
+button {
+	cursor: pointer;
+}
+
+a {
+	color: var(--fg-accent);
+}
+
+a:visited {
+	color var(--fg-accent-dark);
+}
