@@ -12,7 +12,7 @@
 	  "scripting"
   ],
   "content_scripts": [{
-	  "matches": ["https://shanemcd.net/since/*", "http://127.0.0.1:8080/*"],
+	  "matches": ["https://shanemcd.net/since/*"],
 	  "js": ["content-script.js"]
   }],
   "background": {
