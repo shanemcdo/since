@@ -1,4 +1,3 @@
-const newEl = tag => document.createElement(tag);
 const els = {
 	bookmarkList: document.getElementById('bookmark-list'),
 	timerNameInput: document.getElementById('timer-name'),
@@ -14,6 +13,14 @@ async function createBookmark(url) {
 	});
 };
 
+function newEl(tag, parent = null) {
+	const el = document.createElement(tag);
+	if(parent) {
+		parent.appendChild(el);
+	}
+	return el;
+}
+
 function msToHuman(ms) {
 	const calc = (ms, unit) => (ms / unit).toFixed(1);
 	if(ms > YEAR) return getTimeString(calc(ms, YEAR), 'Year');
@@ -27,19 +34,17 @@ function msToHuman(ms) {
 };
 
 function addTimerToList([id, url]) {
-	const li = newEl('li');
-	const title = newEl('a');
+	const li = newEl('li', els.bookmarkList);
+	const title = newEl('a', li);
 	title.innerText = url.searchParams.get('name');
-	title.href = url;
 	title.target = '_blank';
-	li.appendChild(title);
-	const date = newEl('span');
+	const date = newEl('span', li);
 	const interval = setInterval(() => {
 		const diff = Date.now() - url.searchParams.get('date');
 		date.innerText = msToHuman(diff);
+		title.href = url.toString();
 	}, 50);
-	li.appendChild(date);
-	const resetButton = newEl('button');
+	const resetButton = newEl('button', li);
 	resetButton.innerText = 'Reset';
 	resetButton.onclick = () => {
 		url.searchParams.set('date', Date.now());
@@ -48,16 +53,13 @@ function addTimerToList([id, url]) {
 			{ url: url.toString() }
 		);
 	};
-	li.appendChild(resetButton);
-	const removeButton = newEl('button');
+	const removeButton = newEl('button', li);
 	removeButton.innerText = 'Remove';
 	removeButton.onclick = () => {
 		clearInterval(interval);
 		els.bookmarkList.removeChild(li);
 		chrome.bookmarks.remove(id);
 	};
-	li.appendChild(removeButton);
-	els.bookmarkList.appendChild(li);
 }
 
 els.newTimerButton.onclick = async () => {
