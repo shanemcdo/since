@@ -18,12 +18,13 @@ function parse_search(){
 
 function start_counting(){
     const now = new Date();
-    window.location.search = `name=${els.name_in.value}&date=${now.valueOf()}`;
+    
+    window.location.search = `name=${encodeURIComponent(els.name_in.value)}&date=${now.valueOf()}`;
 }
 
 function reset_count(){
     const now = new Date();
-    window.location.search = `name=${els.name_out.innerHTML}&date=${now.valueOf()}`;
+    window.location.search = `name=${encodeURIComponent(els.name_out.innerHTML)}&date=${now.valueOf()}`;
 }
 
 function get_time_string(time, unit){
