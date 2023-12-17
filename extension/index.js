@@ -58,8 +58,8 @@ function addTimerToList([id, url]) {
 	bookmarkList.appendChild(li);
 }
 
-
-async function newTimer() {
+newTimerButton.onclick = async () => {
+	if(timerNameInput.value === '') return;
 	const url = new URL('https://' + BASE_URL);
 	url.searchParams.set('name', timerNameInput.value);
 	url.searchParams.set('date', Date.now());
@@ -68,11 +68,17 @@ async function newTimer() {
 		title: `since "${url.searchParams.get('name')}"`
 	});
 	addTimerToList([bookmark.id, url]);
-}
+	timerNameInput.value = '';
+};
+
+timerNameInput.addEventListener('keydown', event => {
+	if(event.keyCode == 13) { // Enter 
+		newTimerButton.click();
+	}
+});
 
 chrome.bookmarks.search({ query: BASE_URL }, results => {
 	results.toSorted()
 		.map(result => [result.id, new URL(result.url)])
 		.forEach(addTimerToList);
 });
-newTimerButton.onclick = newTimer;
