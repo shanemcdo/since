@@ -35,7 +35,6 @@ function setUpButton(hasBookmark) {
 }
 
 hasBookmark().then(setUpButton);
-previousOnclick = resetButton.onclick;
 resetButton.onclick = async () => {
 	let url = new URL(window.location);
 	url.searchParams.set('date', Date.now());
