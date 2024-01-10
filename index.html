@@ -22,6 +22,10 @@
                 <!-- TODO get on extension store and link install -->
                 </p>
                 <form action="javascript:startCounting()">
+                    <label for="start-now">start now</label>
+                    <input type="checkbox" id="start-now" oninput="showHideDate()" checked/>
+                    <br>
+                    <input type="datetime-local" id="date" class="hidden"/>
                     <input type="text" id="name-in" placeholder="Name" required/>
                     <button type="submit">Start Counting</button>
                 </form>

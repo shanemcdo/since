@@ -4,19 +4,27 @@ const els = {
     dateOut: document.querySelector('#date-out'),
     inDiv: document.querySelector('#in'),
     outDiv: document.querySelector('#out'),
+    startNowCheckbox: document.querySelector('#start-now'),
+    datePicker: document.querySelector('#date'),
 };
 
 const url = new URL(window.location);
 
 function startCounting(){
     url.searchParams.set('name', els.nameIn.value);
-    url.searchParams.set('date', Date.now());
+    const date = els.startNowCheckbox.checked ? Date.now() : (new Date(els.datePicker.value) - 0);
+    url.searchParams.set('date', date);
     window.location.search = url.search;
 }
 
 function resetCount(){
     url.searchParams.set('date', Date.now());
     window.location.search = url.search;
+}
+
+function showHideDate(){
+    els.datePicker.required = !els.startNowCheckbox.checked;
+    els.datePicker.classList.toggle('hidden');
 }
 
 function main(){
