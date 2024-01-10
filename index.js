@@ -24,10 +24,25 @@ function resetCount(){
 
 function showHideDate(){
     els.datePicker.required = !els.startNowCheckbox.checked;
-    els.datePicker.classList.toggle('hidden');
+    if(els.datePicker.required) {
+        els.datePicker.value = new Date(
+            // shift based on timezone
+            Date.now() - new Date().getTimezoneOffset() * 60 * 1000
+        // convert to yyyy-MM-ddThh:mm:ss.SSSZ format
+        ).toISOString()
+        // cut off seconds, miliseconds, and Z on end of string
+        // the Z indicates ISO and that is not accepted by datetime-local
+        .substr(0, 16);
+        els.datePicker.classList.remove('hidden');
+    } else {
+        els.datePicker.classList.add('hidden');
+    }
 }
 
 function main(){
+    // needed when reversing back into page
+    // checkbox might be unchecked
+    setTimeout(showHideDate, 100); 
     if(url.search === '') return;
     const name = url.searchParams.get('name');
     els.inDiv.classList.add('hidden');
