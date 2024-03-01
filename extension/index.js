@@ -34,6 +34,7 @@ function msToHuman(ms) {
 };
 
 function addTimerToList([id, url]) {
+	const previousTimes = []
 	const li = newEl('li', els.bookmarkList);
 	const title = newEl('a', li);
 	title.innerText = url.searchParams.get('name');
@@ -47,11 +48,10 @@ function addTimerToList([id, url]) {
 	const resetButton = newEl('button', li);
 	resetButton.innerText = 'Reset';
 	resetButton.onclick = () => {
+		previousTimes.push(url.searchParams.get('date'))
+		undoButton.disabled = false
 		url.searchParams.set('date', Date.now());
-		chrome.bookmarks.update(
-			id,
-			{ url: url.toString() }
-		);
+		chrome.bookmarks.update(id, { url: url.toString() });
 	};
 	const removeButton = newEl('button', li);
 	removeButton.innerText = 'Remove';
@@ -59,6 +59,17 @@ function addTimerToList([id, url]) {
 		clearInterval(interval);
 		els.bookmarkList.removeChild(li);
 		chrome.bookmarks.remove(id);
+	};
+	// needs to be var for hoisting into resetButton onclick
+	var undoButton = newEl('button', li);
+	undoButton.disabled = true;
+	undoButton.innerText = 'Undo';
+	undoButton.onclick = () => {
+		url.searchParams.set('date', previousTimes.pop())
+		chrome.bookmarks.update(id, { url: url.toString() });
+		if(previousTimes.length < 1) {
+			undoButton.disabled = true;
+		}
 	};
 }
 

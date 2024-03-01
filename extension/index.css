@@ -12,12 +12,12 @@ body {
 	padding: 1rem;
 	background: var(--bg);
 	color: var(--fg);
-	width: 25rem;
+	width: 30rem;
 }
 
 li {
 	display: grid;
-	grid-template-columns: 3fr 2fr 1fr 1fr;
+	grid-template-columns: 3fr 2fr 1fr 1fr 1fr;
 }
 
 button {
