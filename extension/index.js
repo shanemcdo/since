@@ -33,9 +33,9 @@ function msToHuman(ms) {
 	return getTimeString(ms, 'Milisecond');
 };
 
-function addTimerToList([id, url]) {
-	const previousTimes = []
-	const li = newEl('li', els.bookmarkList);
+function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null) {
+	const previousTimes = oldPreviousTimes ?? [];
+	const li = oldLi ?? newEl('li', els.bookmarkList);
 	const title = newEl('a', li);
 	title.innerText = url.searchParams.get('name');
 	title.target = '_blank';
@@ -57,12 +57,23 @@ function addTimerToList([id, url]) {
 	removeButton.innerText = 'Remove';
 	removeButton.onclick = () => {
 		clearInterval(interval);
-		els.bookmarkList.removeChild(li);
 		chrome.bookmarks.remove(id);
+		li.innerHTML = '';
+		for(let i = 0; i < 4; i++) {
+			newEl('div', li);
+		}
+		const undoButton = newEl('button', li);
+		undoButton.innerText = 'Undo';
+		undoButton.onclick = async () => {
+			li.innerHTML = '';
+			const bookmark = await createBookmark(url);
+			addTimerToList(bookmark.id, url, li, previousTimes);
+		};
+
 	};
 	// needs to be var for hoisting into resetButton onclick
 	var undoButton = newEl('button', li);
-	undoButton.disabled = true;
+	undoButton.disabled = previousTimes.length <= 0;
 	undoButton.innerText = 'Undo';
 	undoButton.onclick = () => {
 		url.searchParams.set('date', previousTimes.pop())
@@ -79,7 +90,7 @@ els.newTimerButton.onclick = async () => {
 	url.searchParams.set('name', els.timerNameInput.value);
 	url.searchParams.set('date', Date.now());
 	const bookmark = await createBookmark(url);
-	addTimerToList([bookmark.id, url]);
+	addTimerToList(bookmark.id, url);
 	els.timerNameInput.value = '';
 };
 
@@ -93,5 +104,5 @@ chrome.bookmarks.search({ query: BASE_URL }, results => {
 	results
 		.toSorted((a, b) => a.url < b.url ? -1 : 1)
 		.map(result => [result.id, new URL(result.url)])
-		.forEach(addTimerToList);
+		.forEach(arr => addTimerToList(...arr));
 });
