@@ -25,7 +25,7 @@
                     <label for="start-now">start now</label>
                     <input type="checkbox" id="start-now" oninput="showHideDate()" checked/>
                     <br>
-                    <input type="datetime-local" id="datepicker-in" class="hidden"/>
+                    <input type="datetime-local" id="date" class="hidden"/>
                     <input type="text" id="name-in" placeholder="Name" required/>
                     <button type="submit">Start Counting</button>
                 </form>
@@ -33,7 +33,6 @@
             <div class="hidden" id="out">
                 <h1 id="name-out"></h1>
                 <p id="date-out"></p>
-				<input type="datetime-local" id="datepicker-out" />
                 <button id="reset-button" onclick="resetCount()">Reset Count</button>
                 <button id="create-remove-bookmark" class="hidden"></button>
                 <br>
