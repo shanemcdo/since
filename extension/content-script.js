@@ -1,6 +1,6 @@
 const createRemoveBookmarkButton = document.getElementById('create-remove-bookmark');
 const resetButton = document.getElementById('reset-button');
-const datePickerOut = document.getElementById('#datepicker-out');
+const datePickerOut = document.getElementById('datepicker-out');
 createRemoveBookmarkButton.classList.remove('hidden');
 
 let bookmarkId = null
@@ -35,7 +35,7 @@ function setUpButton(hasBookmark) {
 	}
 }
 
-function updateBookmark(url) {
+async function updateBookmark(url) {
 	if(await hasBookmark()) {
 		await chrome.runtime.sendMessage({ type: 'update', id: bookmarkId, url });
 	}
@@ -52,11 +52,10 @@ resetButton.onclick = async () => {
 	await updateBookmark(url);
 	window.location.href = url.toString();
 }
-datePickerOut.removeEventListener('change');
-datePickerOut.addEventListener('change', async () => {
+datePickerOut.onchange = async () => {
 	let url = new URL(window.location);
-    url.searchParams.set('date', new Date(els.datePickerOut.value) - 0);
+	console.log(datePickerOut.value);
+    url.searchParams.set('date', new Date(datePickerOut.value) - 0);
     window.history.pushState({ path: url.toString() }, '', url.toString());
-    datePickerOut.value = convertISODate(date);
 	await updateBookmark(url);
-});
+};

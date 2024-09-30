@@ -56,10 +56,10 @@ function main(){
     document.title = `since "${name}"`;
     let date = new Date(parseInt(url.searchParams.get('date')));
     els.datePickerOut.value = convertISODate(date);
-    els.datePickerOut.addEventListener('change', () => {
+    els.datePickerOut.onchange= () => {
         url.searchParams.set('date', new Date(els.datePickerOut.value) - 0);
         window.history.pushState({ path: url.toString() }, '', url.toString());
-    });
+    };
     setInterval(() => {
         date = new Date(els.datePickerOut.value);
         const diff = new Date() - date;
