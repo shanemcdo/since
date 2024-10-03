@@ -62,7 +62,9 @@ function main(){
     };
     setInterval(() => {
         date = new Date(els.datePickerOut.value);
-        const diff = new Date() - date;
+        const now = Date.now()
+        const in_future = now < date - 0;
+        const diff = Math.abs(now - date);
         const time = {
             year: Math.floor(diff / YEAR),
             week: Math.floor(diff / WEEK) % 52,
@@ -74,7 +76,7 @@ function main(){
         };
         els.dateOut.innerHTML = Object.entries(time)
             .filter(([, value]) => value !== 0)
-            .map(([unit, value]) => getTimeString(value, unit))
+            .map(([unit, value]) => (in_future ? '-' : '') + getTimeString(value, unit))
             .join('<br>');
     }, 100);
 }
