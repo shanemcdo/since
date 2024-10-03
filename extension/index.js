@@ -23,14 +23,18 @@ function newEl(tag, parent = null) {
 
 function msToHuman(ms) {
 	const calc = (ms, unit) => (ms / unit).toFixed(1);
-	if(ms > YEAR) return getTimeString(calc(ms, YEAR), 'Year');
-	if(ms > MONTH) return getTimeString(calc(ms, MONTH), 'Month');
-	if(ms > WEEK) return getTimeString(calc(ms, WEEK), 'Week');
-	if(ms > DAY) return getTimeString(calc(ms, DAY), 'Day');
-	if(ms > HOUR) return getTimeString(calc(ms, HOUR), 'Hour');
-	if(ms > MINUTE) return getTimeString(calc(ms, MINUTE), 'Minute');
-	if(ms > SECOND) return getTimeString(calc(ms, SECOND), 'Second');
-	return getTimeString(ms, 'Milisecond');
+	const func = () => {
+		const abs = Math.abs(ms);
+		if(abs > YEAR) return getTimeString(calc(abs, YEAR), 'Year');
+		if(abs > MONTH) return getTimeString(calc(abs, MONTH), 'Month');
+		if(abs > WEEK) return getTimeString(calc(abs, WEEK), 'Week');
+		if(abs > DAY) return getTimeString(calc(abs, DAY), 'Day');
+		if(abs > HOUR) return getTimeString(calc(abs, HOUR), 'Hour');
+		if(abs > MINUTE) return getTimeString(calc(abs, MINUTE), 'Minute');
+		if(abs > SECOND) return getTimeString(calc(abs, SECOND), 'Second');
+		return getTimeString(abs, 'Milisecond');
+	}
+	return (ms < 0 ? '-' : ' ') + func();
 };
 
 function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null) {
