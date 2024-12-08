@@ -72,7 +72,8 @@ async function getBookmarks() {
 	return await chrome.runtime.sendMessage({ type: 'getAll' });
 };
 
-getBookmarks().then(results => {
+// set up list in top left
+(() => {
 	const divTag = newEl('div', document.body);
 	divTag.style.position = 'absolute';
 	divTag.style.top = '10px';
@@ -90,19 +91,23 @@ getBookmarks().then(results => {
 			listTag.style.display = '';
 		}
 	}
-	results
-		.toSorted((a, b) => a.url < b.url ? -1 : 1)
-		.map(result => [result.id, new URL(result.url)])
-		.forEach(([id, url]) => {
-			if(id === bookmarkId) return;
-			const liTag = newEl('li', listTag);
-			const aTag = newEl('a', liTag);
+	setInterval(async () => {
+		let childIndex = 0;
+		const results = (await getBookmarks()).toSorted((a, b) => a.url < b.url ? -1 : 1);
+		for(let i = 0; i < results.length; i++) {
+			const url = new URL(results[i].url);
+			let aTag;
+			if(i < listTag.childNodes.length) {
+				aTag = listTag.childNodes[i].childNodes[0];
+			} else {
+				const liTag = newEl('li', listTag);
+				aTag = newEl('a', liTag);
+			}
 			aTag.innerText = url.searchParams.get('name');
 			aTag.href = url.toString();
-			setInterval(async () => {
-				const url = new URL(await chrome.runtime.sendMessage({ type: 'getUrl', id }));
-				aTag.innerText = url.searchParams.get('name');
-				aTag.href = url.toString();
-			}, 100)
-		});
-});
+		}
+		while(listTag.childNodes.length > results.length) {
+			listTag.removeChild(listTag.childNodes[listTag.childNodes.length - 1]);
+		}
+	}, 100);
+})();
