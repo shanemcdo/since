@@ -1,3 +1,5 @@
+const BASE_URL = 'shanemcd.net/since/';
+
 async function createBookmark(url) {
 	return await chrome.bookmarks.create({
 		url: url.toString(),
@@ -21,6 +23,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 				chrome.bookmarks.update(request.id, { url: request.url });
 				sendResponse(null);
 			})
+			break;
+	case 'getUrl':
+			chrome.bookmarks.get(request.id, x => sendResponse(x[0].url));
+			break;
+	case 'getAll':
+			chrome.bookmarks.search({ query: BASE_URL }, sendResponse);
 			break;
 	default:
 		throw new Error(`Invalid request type ${type}`);

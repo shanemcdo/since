@@ -59,3 +59,50 @@ datePickerOut.onchange = async () => {
     window.history.pushState({ path: url.toString() }, '', url.toString());
 	await updateBookmark(url);
 };
+
+function newEl(tag, parent = null) {
+	const el = document.createElement(tag);
+	if(parent) {
+		parent.appendChild(el);
+	}
+	return el;
+}
+
+async function getBookmarks() {
+	return await chrome.runtime.sendMessage({ type: 'getAll' });
+};
+
+getBookmarks().then(results => {
+	const divTag = newEl('div', document.body);
+	divTag.style.position = 'absolute';
+	divTag.style.top = '10px';
+	divTag.style.left = '10px';
+	divTag.style['text-align'] = 'left';
+	const listTag = newEl('ul', divTag);
+	const buttonTag = newEl('button', divTag);
+	buttonTag.innerText = 'Hide';
+	buttonTag.onclick = () => {
+		if(buttonTag.innerText === 'Hide') {
+			buttonTag.innerText = 'Show';
+			listTag.style.display = 'none';
+		} else {
+			buttonTag.innerText = 'Hide';
+			listTag.style.display = '';
+		}
+	}
+	results
+		.toSorted((a, b) => a.url < b.url ? -1 : 1)
+		.map(result => [result.id, new URL(result.url)])
+		.forEach(([id, url]) => {
+			if(id === bookmarkId) return;
+			const liTag = newEl('li', listTag);
+			const aTag = newEl('a', liTag);
+			aTag.innerText = url.searchParams.get('name');
+			aTag.href = url.toString();
+			setInterval(async () => {
+				const url = new URL(await chrome.runtime.sendMessage({ type: 'getUrl', id }));
+				aTag.innerText = url.searchParams.get('name');
+				aTag.href = url.toString();
+			}, 100)
+		});
+});
