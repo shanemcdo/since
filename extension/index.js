@@ -1,5 +1,6 @@
 const els = {
 	bookmarkList: document.getElementById('bookmark-list'),
+	searchInput: document.getElementById('search'),
 	timerNameInput: document.getElementById('timer-name'),
 	newTimerButton: document.getElementById('new-timer-button'),
 	sortDateButton: document.getElementById('sort-date-button'),
@@ -123,6 +124,18 @@ els.newTimerButton.onclick = async () => {
 	addTimerToList(bookmark.id, url);
 	els.timerNameInput.value = '';
 };
+
+els.searchInput.addEventListener('keyup', event => {
+	if(els.searchInput.value === '') {
+		els.bookmarkList.querySelectorAll('li').forEach(li => {
+			li.style.display = '';
+		})
+		return;
+	}
+	els.bookmarkList.querySelectorAll('li').forEach(li => {
+		li.style.display = li.children[0].innerHTML.toLowerCase().includes(els.searchInput.value.toLowerCase()) ? '' : 'None';
+	})
+});
 
 els.timerNameInput.addEventListener('keydown', event => {
 	if(event.keyCode == 13) { // Enter 
