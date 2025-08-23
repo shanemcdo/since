@@ -90,7 +90,7 @@ function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null) {
 	};
 }
 
-function fill_bookmarks(sort_func) {
+function fillBookmarks(sort_func) {
 	chrome.bookmarks.search({ query: BASE_URL }, results => {
 		results
 			.toSorted(sort_func)
@@ -99,7 +99,7 @@ function fill_bookmarks(sort_func) {
 	});
 }
 
-function sort_bookmarks(sort_func) {
+function sortBookmarks(sort_func) {
 	const lis = [];
 	const children = [...els.bookmarkList.children];
 	for (const li of children) {
@@ -140,13 +140,13 @@ const sort_date_func = (a, b) => {
 els.sortDateButton.onclick = () => {
 	els.sortDateButton.style.display = 'none';
 	els.sortNameButton.style.display = '';
-	sort_bookmarks(sort_date_func);
+	sortBookmarks(sort_date_func);
 };
 
 els.sortNameButton.onclick = () => {
 	els.sortNameButton.style.display = 'none';
 	els.sortDateButton.style.display = '';
-	sort_bookmarks(sort_url_func);
+	sortBookmarks(sort_url_func);
 };
 
-fill_bookmarks(sort_url_func);
+fillBookmarks(sort_url_func);
