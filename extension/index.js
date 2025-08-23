@@ -128,11 +128,15 @@ const sort_date_func = (a, b) => {
 };
 
 els.sortDateButton.onclick = () => {
+	els.sortDateButton.style.display = 'none';
+	els.sortNameButton.style.display = '';
 	clear_bookmarks();
 	fill_bookmarks(sort_date_func);
 };
 
 els.sortNameButton.onclick = () => {
+	els.sortNameButton.style.display = 'none';
+	els.sortDateButton.style.display = '';
 	clear_bookmarks();
 	fill_bookmarks(sort_url_func);
 };
