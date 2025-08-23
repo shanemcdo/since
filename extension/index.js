@@ -2,7 +2,8 @@ const els = {
 	bookmarkList: document.getElementById('bookmark-list'),
 	timerNameInput: document.getElementById('timer-name'),
 	newTimerButton: document.getElementById('new-timer-button'),
-	sortButton: document.getElementById('sort-button'),
+	sortDateButton: document.getElementById('sort-date-button'),
+	sortNameButton: document.getElementById('sort-name-button'),
 };
 
 const BASE_URL = 'shanemcd.net/since/';
@@ -98,6 +99,11 @@ function fill_bookmarks(sort_func) {
 	});
 }
 
+function clear_bookmarks() {
+	// TODO: this leaks setInterval calls
+	els.bookmarkList.innerHTML = '';
+}
+
 els.newTimerButton.onclick = async () => {
 	if(els.timerNameInput.value === '') return;
 	const url = new URL('https://' + BASE_URL);
@@ -114,13 +120,21 @@ els.timerNameInput.addEventListener('keydown', event => {
 	}
 });
 
-els.sortButton.onclick = () => {
-	els.bookmarkList.innerHTML = "";
-	fill_bookmarks((a, b) => {
-		const a_date = new URL(a.url).searchParams.get('date');
-		const b_date = new URL(b.url).searchParams.get('date');
-		return a_date > b_date ? -1 : 1;
-	});
+const sort_url_func = (a, b) => a.url < b.url ? -1 : 1;
+const sort_date_func = (a, b) => {
+	const a_date = new URL(a.url).searchParams.get('date');
+	const b_date = new URL(b.url).searchParams.get('date');
+	return a_date > b_date ? -1 : 1;
 };
 
-fill_bookmarks((a, b) => a.url < b.url ? -1 : 1);
+els.sortDateButton.onclick = () => {
+	clear_bookmarks();
+	fill_bookmarks(sort_date_func);
+};
+
+els.sortNameButton.onclick = () => {
+	clear_bookmarks();
+	fill_bookmarks(sort_url_func);
+};
+
+fill_bookmarks(sort_url_func);
