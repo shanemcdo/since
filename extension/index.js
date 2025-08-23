@@ -99,9 +99,19 @@ function fill_bookmarks(sort_func) {
 	});
 }
 
-function clear_bookmarks() {
-	// TODO: this leaks setInterval calls
-	els.bookmarkList.innerHTML = '';
+function sort_bookmarks(sort_func) {
+	const lis = [];
+	const children = [...els.bookmarkList.children];
+	for (const li of children) {
+		lis.push(li);
+		els.bookmarkList.removeChild(li);
+	}
+	lis
+		.toSorted((a, b) => sort_func(
+			{ url: a.children[0].href },
+			{ url: b.children[0].href },
+		))
+		.forEach(li => els.bookmarkList.appendChild(li));
 }
 
 els.newTimerButton.onclick = async () => {
@@ -130,15 +140,13 @@ const sort_date_func = (a, b) => {
 els.sortDateButton.onclick = () => {
 	els.sortDateButton.style.display = 'none';
 	els.sortNameButton.style.display = '';
-	clear_bookmarks();
-	fill_bookmarks(sort_date_func);
+	sort_bookmarks(sort_date_func);
 };
 
 els.sortNameButton.onclick = () => {
 	els.sortNameButton.style.display = 'none';
 	els.sortDateButton.style.display = '';
-	clear_bookmarks();
-	fill_bookmarks(sort_url_func);
+	sort_bookmarks(sort_url_func);
 };
 
 fill_bookmarks(sort_url_func);
