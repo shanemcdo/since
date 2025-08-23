@@ -2,6 +2,7 @@ const els = {
 	bookmarkList: document.getElementById('bookmark-list'),
 	timerNameInput: document.getElementById('timer-name'),
 	newTimerButton: document.getElementById('new-timer-button'),
+	sortButton: document.getElementById('sort-button'),
 };
 
 const BASE_URL = 'shanemcd.net/since/';
@@ -88,6 +89,15 @@ function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null) {
 	};
 }
 
+function fill_bookmarks(sort_func) {
+	chrome.bookmarks.search({ query: BASE_URL }, results => {
+		results
+			.toSorted(sort_func)
+			.map(result => [result.id, new URL(result.url)])
+			.forEach(arr => addTimerToList(...arr));
+	});
+}
+
 els.newTimerButton.onclick = async () => {
 	if(els.timerNameInput.value === '') return;
 	const url = new URL('https://' + BASE_URL);
@@ -104,9 +114,13 @@ els.timerNameInput.addEventListener('keydown', event => {
 	}
 });
 
-chrome.bookmarks.search({ query: BASE_URL }, results => {
-	results
-		.toSorted((a, b) => a.url < b.url ? -1 : 1)
-		.map(result => [result.id, new URL(result.url)])
-		.forEach(arr => addTimerToList(...arr));
-});
+els.sortButton.onclick = () => {
+	els.bookmarkList.innerHTML = "";
+	fill_bookmarks((a, b) => {
+		const a_date = new URL(a.url).searchParams.get('date');
+		const b_date = new URL(b.url).searchParams.get('date');
+		return a_date > b_date ? -1 : 1;
+	});
+};
+
+fill_bookmarks((a, b) => a.url < b.url ? -1 : 1);
