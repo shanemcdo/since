@@ -40,11 +40,32 @@ function msToHuman(ms) {
 	return (ms < 0 ? '-' : ' ') + func();
 };
 
-function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null) {
+function getList(folderName, bookmarkList) {
+	const lists = bookmarkList.querySelectorAll('details')
+	for(const list of lists) {
+		if(list.querySelector('summary').innerText == folderName) {
+			return list.querySelector('ul');
+		}
+	}
+	const details = newEl('details', bookmarkList);
+	const summary = newEl('summary', details);
+	summary.innerText = folderName;
+	const ul = newEl('ul', details);
+	return ul;
+}
+
+function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null, bookmarkList = null) {
+	let list = bookmarkList ?? els.bookmarkList
+	let name = url.searchParams.get('name');
+	if(name.includes('/')) { 
+		const [folder, ...rest] = name.split('/');
+		list = getList(folder, list);
+		name = rest.join('/');
+	}
 	const previousTimes = oldPreviousTimes ?? [];
-	const li = oldLi ?? newEl('li', els.bookmarkList);
+	const li = oldLi ?? newEl('li', list);
 	const title = newEl('a', li);
-	title.innerText = url.searchParams.get('name');
+	title.innerText = name;
 	title.target = '_blank';
 	const date = newEl('span', li);
 	const interval = setInterval(() => {
