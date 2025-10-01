@@ -127,6 +127,7 @@ function fillBookmarks(sort_func) {
 	});
 }
 
+// TODO: doesn't work with folders
 function sortBookmarks(sort_func) {
 	const lis = [];
 	const children = [...els.bookmarkList.children];
@@ -180,13 +181,15 @@ const sort_date_func = (a, b) => {
 els.sortDateButton.onclick = () => {
 	els.sortDateButton.style.display = 'none';
 	els.sortNameButton.style.display = '';
-	sortBookmarks(sort_date_func);
+	els.bookmarkList.innerHTML = '';
+	fillBookmarks(sort_date_func);
 };
 
 els.sortNameButton.onclick = () => {
 	els.sortNameButton.style.display = 'none';
 	els.sortDateButton.style.display = '';
-	sortBookmarks(sort_url_func);
+	els.bookmarkList.innerHTML = '';
+	fillBookmarks(sort_url_func);
 };
 
 fillBookmarks(sort_url_func);
