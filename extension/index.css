@@ -15,6 +15,14 @@ body {
 	width: 40rem;
 }
 
+ul {
+	padding: 0;
+}
+
+details > ul {
+	padding-left: 1rem;
+}
+
 li {
 	display: grid;
 	grid-template-columns: 3fr 2fr 1fr 1fr 1fr;
