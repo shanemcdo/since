@@ -54,13 +54,19 @@ function getList(folderName, bookmarkList) {
 	return ul;
 }
 
-function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null, bookmarkList = null) {
+function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null, bookmarkList = null, timerName = null) {
 	let list = bookmarkList ?? els.bookmarkList
-	let name = url.searchParams.get('name');
+	let name = timerName ?? url.searchParams.get('name');
 	if(name.includes('/')) { 
 		const [folder, ...rest] = name.split('/');
-		list = getList(folder, list);
-		name = rest.join('/');
+		return addTimerToList(
+			id,
+			url,
+			oldLi,
+			oldPreviousTimes,
+			getList(folder, list),
+			rest.join('/'),
+		);
 	}
 	const previousTimes = oldPreviousTimes ?? [];
 	const li = oldLi ?? newEl('li', list);
