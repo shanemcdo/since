@@ -14,7 +14,6 @@ let extension_folder_id = null;
 async function get_extension_folder_id() { 
 	const results = await chrome.bookmarks.search({ title: BOOKMARK_FOLDER_TITLE });
 	if(results.length > 0) {
-		console.error(results);
 		return results[0].id;
 	}
 	return (await chrome.bookmarks.create({ title: BOOKMARK_FOLDER_TITLE })).id;
