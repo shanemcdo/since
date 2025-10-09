@@ -1,4 +1,5 @@
 const BASE_URL = 'shanemcd.net/since/';
+const BOOKMARK_FOLDER_TITLE = '"Since" Extension Bookmarks';
 
 async function createBookmark(url) {
 	return await chrome.bookmarks.create({
