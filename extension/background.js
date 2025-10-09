@@ -1,8 +1,21 @@
 const BASE_URL = 'shanemcd.net/since/';
 const BOOKMARK_FOLDER_TITLE = '"Since" Extension Bookmarks';
+let extension_folder_id = null;
+
+async function get_extension_folder_id() { 
+	const results = await chrome.bookmarks.search({ title: BOOKMARK_FOLDER_TITLE });
+	if(results.length > 0) {
+		return results[0].id;
+	}
+	return (await chrome.bookmarks.create({ title: BOOKMARK_FOLDER_TITLE })).id;
+};
 
 async function createBookmark(url) {
+	if(extension_folder_id === null) {
+		extension_folder_id = await get_extension_folder_id();
+	}
 	return await chrome.bookmarks.create({
+		parentId: extension_folder_id,
 		url: url.toString(),
 		title: `since "${url.searchParams.get('name')}"`
 	});
