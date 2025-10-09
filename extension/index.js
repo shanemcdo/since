@@ -8,7 +8,6 @@ const els = {
 };
 
 const BASE_URL = 'shanemcd.net/since/';
-const BOOKMARK_FOLDER_TITLE = '"Since" Extension Bookmarks';
 let extension_folder_id = null;
 
 async function get_extension_folder_id() { 
