@@ -72,42 +72,57 @@ async function getBookmarks() {
 	return await chrome.runtime.sendMessage({ type: 'getAll' });
 };
 
-// set up list in top left
-(() => {
-	const divTag = newEl('div', document.body);
-	divTag.style.position = 'absolute';
-	divTag.style.top = '10px';
-	divTag.style.left = '10px';
-	divTag.style['text-align'] = 'left';
-	const listTag = newEl('ul', divTag);
-	const buttonTag = newEl('button', divTag);
-	buttonTag.innerText = 'Hide';
-	buttonTag.onclick = () => {
-		if(buttonTag.innerText === 'Hide') {
-			buttonTag.innerText = 'Show';
-			listTag.style.display = 'none';
-		} else {
-			buttonTag.innerText = 'Hide';
-			listTag.style.display = '';
+function getList(folderName, bookmarkList) {
+	const lists = bookmarkList.querySelectorAll('details')
+	for(const list of lists) {
+		if(list.querySelector('summary').innerText == folderName) {
+			return list.querySelector('ul');
 		}
 	}
+	const details = newEl('details', bookmarkList);
+	const summary = newEl('summary', details);
+	summary.innerText = folderName;
+	const ul = newEl('ul', details);
+	return ul;
+}
+
+function addItemToList(url, list, itemName = null) {
+	const name = itemName ?? url.searchParams.get('name');
+	if(name.includes('/')) {
+		const [folder, ...rest] = name.split('/');
+		return addItemToList(
+			url,
+			getList(folder, list),
+			rest.join('/')
+		);
+	}
+	const liTag = newEl('li', list);
+	const aTag = newEl('a', liTag);
+	aTag.innerText = name;
+	aTag.href = url.toString();
+}
+
+// set up list in top left
+(() => {
+	const detailsTag = newEl('details', document.body);
+	detailsTag.style.position = 'absolute';
+	detailsTag.style.top = '10px';
+	detailsTag.style.left = '10px';
+	detailsTag.style['text-align'] = 'left';
+	detailsTag.open = true;
+	const summaryTag = newEl('summary', detailsTag);
+	summaryTag.innerText = 'Bookmarks';
+	const listTag = newEl('ul', detailsTag);
 	setInterval(async () => {
-		let childIndex = 0;
-		const results = (await getBookmarks()).toSorted((a, b) => a.url < b.url ? -1 : 1);
-		for(let i = 0; i < results.length; i++) {
-			const url = new URL(results[i].url);
-			let aTag;
-			if(i < listTag.childNodes.length) {
-				aTag = listTag.childNodes[i].childNodes[0];
-			} else {
-				const liTag = newEl('li', listTag);
-				aTag = newEl('a', liTag);
-			}
-			aTag.innerText = url.searchParams.get('name');
-			aTag.href = url.toString();
-		}
-		while(listTag.childNodes.length > results.length) {
-			listTag.removeChild(listTag.childNodes[listTag.childNodes.length - 1]);
-		}
+		const urls = [...listTag.querySelectorAll('a').entries().map(([_, x]) => x.href)];
+		const results = await getBookmarks();
+		results
+			.toSorted((a, b) => a.url < b.url ? -1 : 1)
+			.forEach(bookmark => {
+				const url = new URL(bookmark.url);
+				if(!urls.includes(url.toString())) {
+					addItemToList(url, listTag);
+				}
+			});
 	}, 100);
 })();
