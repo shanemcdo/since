@@ -108,7 +108,7 @@ function removeItemFromList(url, list, rootList) {
 		const liTag = aTag.parentNode;
 		const ulTag = liTag.parentNode;
 		ulTag.removeChild(liTag);
-		if(ulTag.children.length === 0 && list !== rootList) {
+		if(ulTag.childNodes.length === 0 && ulTag !== rootList) {
 			const detailsTag = ulTag.parentNode;
 			detailsTag.parentNode.removeChild(detailsTag);
 		}
