@@ -102,6 +102,20 @@ function addItemToList(url, list, itemName = null) {
 	aTag.href = url.toString();
 }
 
+function removeItemFromList(url, list, rootList) {
+	for(const aTag of list.querySelectorAll('a')) {
+		if(aTag.href !== url) continue;
+		const liTag = aTag.parentNode;
+		const ulTag = liTag.parentNode;
+		ulTag.removeChild(liTag);
+		if(ulTag.children.length === 0 && list !== rootList) {
+			const detailsTag = ulTag.parentNode;
+			detailsTag.parentNode.removeChild(detailsTag);
+		}
+		return;
+	};
+}
+
 // set up list in top left
 (() => {
 	const detailsTag = newEl('details', document.body);
@@ -124,5 +138,11 @@ function addItemToList(url, list, itemName = null) {
 					addItemToList(url, listTag);
 				}
 			});
+		const results_urls = [... results.map(x => x.url)];
+		urls.forEach(url => {
+			if(!results_urls.includes(url)) {
+				removeItemFromList(url, listTag, listTag);
+			}
+		});
 	}, 100);
 })();
