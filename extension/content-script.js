@@ -106,11 +106,12 @@ function removeItemFromList(url, list, rootList) {
 	for(const aTag of list.querySelectorAll('a')) {
 		if(aTag.href !== url) continue;
 		const liTag = aTag.parentNode;
-		const ulTag = liTag.parentNode;
+		let ulTag = liTag.parentNode;
 		ulTag.removeChild(liTag);
-		if(ulTag.childNodes.length === 0 && ulTag !== rootList) {
+		while(ulTag.childNodes.length === 0 && ulTag !== rootList) {
 			const detailsTag = ulTag.parentNode;
-			detailsTag.parentNode.removeChild(detailsTag);
+			ulTag = detailsTag.parentNode;
+			ulTag.removeChild(detailsTag);
 		}
 		return;
 	};
