@@ -93,16 +93,35 @@ function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null, bookmark
 		date.innerText = msToHuman(diff);
 		title.href = url.toString();
 	}, 50);
-	const resetButton = newEl('button', li);
+	let isLocked = url.searchParams.get('locked', 'Boolean') === 'true';
+	const lockButton = newEl('button', li);
+	lockButton.innerText = '🔒';
+	lockButton.onclick = () => {
+		isLocked = !isLocked;
+		if(isLocked) {
+			resetButton.disabled = true;
+			removeButton.disabled = true;
+			undoButton.disabled = true;
+		} else {
+			resetButton.disabled = false;
+			removeButton.disabled = false;
+			undoButton.disabled = previousTimes.length === 0;
+		}
+		url.searchParams.set('locked', isLocked);
+		chrome.bookmarks.update(id, { url: url.toString() });
+	};
+	var resetButton = newEl('button', li);
 	resetButton.innerText = 'Reset';
+	resetButton.disabled = isLocked;
 	resetButton.onclick = () => {
 		previousTimes.push(url.searchParams.get('date'))
 		undoButton.disabled = false
 		url.searchParams.set('date', Date.now());
 		chrome.bookmarks.update(id, { url: url.toString() });
 	};
-	const removeButton = newEl('button', li);
+	var removeButton = newEl('button', li);
 	removeButton.innerText = 'Remove';
+	removeButton.disabled = isLocked;
 	removeButton.onclick = () => {
 		clearInterval(interval);
 		chrome.bookmarks.remove(id);
