@@ -95,9 +95,10 @@ function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null, bookmark
 	}, 50);
 	let isLocked = url.searchParams.get('locked', 'Boolean') === 'true';
 	const lockButton = newEl('button', li);
-	lockButton.innerText = '🔒';
+	lockButton.innerText = isLocked ? '🔒' : '🔓';
 	lockButton.onclick = () => {
 		isLocked = !isLocked;
+		lockButton.innerText = isLocked ? '🔒' : '🔓';
 		if(isLocked) {
 			resetButton.disabled = true;
 			removeButton.disabled = true;
