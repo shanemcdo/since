@@ -107,7 +107,7 @@ function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null, bookmark
 			removeButton.disabled = false;
 			undoButton.disabled = previousTimes.length === 0;
 		}
-		url.searchParams.set('locked', isLocked);
+		url.searchParams.set('locked', isLocked );
 		chrome.bookmarks.update(id, { url: url.toString() });
 	};
 	var resetButton = newEl('button', li);
