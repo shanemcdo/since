@@ -56,18 +56,28 @@ function main(){
     els.nameOut.innerHTML = name;
     document.title = `since "${name}"`;
     let date = new Date(parseInt(url.searchParams.get('date')));
-    els.datePickerOut.value = convertISODate(date);
-    els.datePickerOut.onchange= () => {
-        url.searchParams.set('date', new Date(els.datePickerOut.value) - 0);
+    const updateURL = () => 
         window.history.pushState({ path: url.toString() }, '', url.toString());
+    els.datePickerOut.value = convertISODate(date);
+    els.datePickerOut.onchange = () => {
+        url.searchParams.set('date', new Date(els.datePickerOut.value) - 0);
+        updateURL();
     };
+    els.units.onchange = () => {
+        url.searchParams.set('unit', els.units.value);
+        updateURL();
+    };
+    const unit = url.searchParams.get('unit');
+    if(unit) {
+        els.units.value = unit;
+    }
     setInterval(() => {
         date = new Date(els.datePickerOut.value);
         const now = Date.now()
         const in_future = now < date - 0;
         const diff = Math.abs(now - date);
         switch(els.units.value) {
-        case "mix":
+        case 'mix':
             const time = {
                 year: Math.floor(diff / YEAR),
                 week: Math.floor(diff / WEEK) % 52,
@@ -82,21 +92,22 @@ function main(){
                 .map(([unit, value]) => (in_future ? '-' : '') + getTimeString(value, unit))
                 .join('<br>');
             break;
-        case "year":
-        case "month":
-        case "week":
-        case "day":
-        case "hour":
-        case "minute":
-        case "second":
-        case "millisecond":
+        case 'year':
+        case 'month':
+        case 'week':
+        case 'day':
+        case 'hour':
+        case 'minute':
+        case 'second':
+        case 'millisecond':
             els.dateOut.innerHTML = getTimeString(diff / UNITS[els.units.value], els.units.value, 6);
             break;
-        case "largest":
+        case 'largest':
             els.dateOut.innerHTML = msToHuman(diff, 6);
             break;
         default:
-            throw new Error('Unexpected unit');
+            console.error(`Unexpected unit: "${els.units.value}"`);
+            els.units.value = 'mix';
             break;
         }
     }, 100);
