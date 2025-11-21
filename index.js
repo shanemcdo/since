@@ -90,7 +90,10 @@ function main(){
         case "minute":
         case "second":
         case "millisecond":
-            els.dateOut.innerHTML = getTimeString(diff / UNITS[els.units.value], els.units.value);
+            els.dateOut.innerHTML = getTimeString(diff / UNITS[els.units.value], els.units.value, 6);
+            break;
+        case "largest":
+            els.dateOut.innerHTML = msToHuman(diff, 6);
             break;
         default:
             throw new Error('Unexpected unit');

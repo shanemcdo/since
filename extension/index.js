@@ -38,22 +38,6 @@ function newEl(tag, parent = null) {
 	return el;
 }
 
-function msToHuman(ms) {
-	const calc = (ms, unit) => (ms / unit).toFixed(1);
-	const func = () => {
-		const abs = Math.abs(ms);
-		if(abs > YEAR) return getTimeString(calc(abs, YEAR), 'Year');
-		if(abs > MONTH) return getTimeString(calc(abs, MONTH), 'Month');
-		if(abs > WEEK) return getTimeString(calc(abs, WEEK), 'Week');
-		if(abs > DAY) return getTimeString(calc(abs, DAY), 'Day');
-		if(abs > HOUR) return getTimeString(calc(abs, HOUR), 'Hour');
-		if(abs > MINUTE) return getTimeString(calc(abs, MINUTE), 'Minute');
-		if(abs > SECOND) return getTimeString(calc(abs, SECOND), 'Second');
-		return getTimeString(abs, 'Milisecond');
-	}
-	return (ms < 0 ? '-' : ' ') + func();
-};
-
 function getList(folderName, bookmarkList) {
 	const lists = bookmarkList.querySelectorAll('details')
 	for(const list of lists) {
