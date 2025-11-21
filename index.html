@@ -32,8 +32,20 @@
             </div>
             <div class="hidden" id="out">
                 <h1 id="name-out"></h1>
+                <label for="units">Units:</label>
+                <select id="units" value="mix">
+                    <option value="mix">Mix</option>
+                    <option value="year">Years</option>
+                    <option value="month">Months (31 days)</option>
+                    <option value="week">Weeks</option>
+                    <option value="day">Days</option>
+                    <option value="hour">Hours</option>
+                    <option value="minute">Minutes</option>
+                    <option value="second">Seconds</option>
+                    <option value="millisecond">Miliseconds</option>
+                </select>
                 <p id="date-out"></p>
-				<input type="datetime-local" id="datepicker-out" />
+                <input type="datetime-local" id="datepicker-out" />
                 <button id="reset-button" onclick="resetCount()">Reset Count</button>
                 <button id="create-remove-bookmark" class="hidden"></button>
                 <br>

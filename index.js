@@ -7,6 +7,7 @@ const els = {
     startNowCheckbox: document.querySelector('#start-now'),
     datePickerIn: document.querySelector('#datepicker-in'),
     datePickerOut: document.querySelector('#datepicker-out'),
+    units: document.querySelector('#units'),
 };
 
 const url = new URL(window.location);
@@ -65,19 +66,36 @@ function main(){
         const now = Date.now()
         const in_future = now < date - 0;
         const diff = Math.abs(now - date);
-        const time = {
-            year: Math.floor(diff / YEAR),
-            week: Math.floor(diff / WEEK) % 52,
-            day: Math.floor(diff / DAY) % 7,
-            hour: Math.floor(diff / HOUR) % 24,
-            minute: Math.floor(diff / MINUTE) % 60,
-            second: Math.floor(diff / SECOND) % 60,
-            milisecond: diff % SECOND,
-        };
-        els.dateOut.innerHTML = Object.entries(time)
-            .filter(([, value]) => value !== 0)
-            .map(([unit, value]) => (in_future ? '-' : '') + getTimeString(value, unit))
-            .join('<br>');
+        switch(els.units.value) {
+        case "mix":
+            const time = {
+                year: Math.floor(diff / YEAR),
+                week: Math.floor(diff / WEEK) % 52,
+                day: Math.floor(diff / DAY) % 7,
+                hour: Math.floor(diff / HOUR) % 24,
+                minute: Math.floor(diff / MINUTE) % 60,
+                second: Math.floor(diff / SECOND) % 60,
+                milisecond: diff % SECOND,
+            };
+            els.dateOut.innerHTML = Object.entries(time)
+                .filter(([, value]) => value !== 0)
+                .map(([unit, value]) => (in_future ? '-' : '') + getTimeString(value, unit))
+                .join('<br>');
+            break;
+        case "year":
+        case "month":
+        case "week":
+        case "day":
+        case "hour":
+        case "minute":
+        case "second":
+        case "millisecond":
+            els.dateOut.innerHTML = getTimeString(diff / UNITS[els.units.value], els.units.value);
+            break;
+        default:
+            throw new Error('Unexpected unit');
+            break;
+        }
     }, 100);
 }
 
