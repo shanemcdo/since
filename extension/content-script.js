@@ -1,6 +1,7 @@
 const createRemoveBookmarkButton = document.getElementById('create-remove-bookmark');
 const resetButton = document.getElementById('reset-button');
 const datePickerOut = document.getElementById('datepicker-out');
+const unitSelect = document.getElementById('units');
 createRemoveBookmarkButton.classList.remove('hidden');
 
 let bookmarkId = null
@@ -56,6 +57,12 @@ datePickerOut.onchange = async () => {
 	let url = new URL(window.location);
 	console.log(datePickerOut.value);
     url.searchParams.set('date', new Date(datePickerOut.value) - 0);
+    window.history.pushState({ path: url.toString() }, '', url.toString());
+	await updateBookmark(url);
+};
+unitSelect.onchange = async () => {
+	let url = new URL(window.location);
+    url.searchParams.set('unit', unitSelect.value);
     window.history.pushState({ path: url.toString() }, '', url.toString());
 	await updateBookmark(url);
 };
