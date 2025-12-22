@@ -27,10 +27,10 @@ function formatNumber(number, precision = null) {
         /\B(?=(\d{3})+(?!\d))/g,
         ','
     );
-    console.table({
-        before, after, beforeWithComma
-    })
-    return [beforeWithComma, after].join('.');
+    const result = [beforeWithComma];
+    if(after)
+        result.push(after);
+    return result.join('.');
 }
 
 function getTimeString(time, unit, precision = null){
