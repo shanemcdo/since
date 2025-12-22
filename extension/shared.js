@@ -17,10 +17,21 @@ const UNITS = Object.freeze({
     'year': YEAR,
 });
 
+function formatNumber(number, precision = null) {
+    let [before, after] = number.toFixed(precision).split('.');
+    // https://stackoverflow.com/questions/2901102/how-can-i-format-a-number-with-commas-as-thousands-separators
+    const beforeWithComma = before.replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        ','
+    );
+    console.table({
+        before, after, beforeWithComma
+    })
+    return [beforeWithComma, after].join('.');
+}
+
 function getTimeString(time, unit, precision = null){
-    if(precision !== null) {
-        time = time.toFixed(precision);
-    }
+    time = formatNumber(time, precision);
     return `${time} ${unit}${time === 1 || time === '1.0' ? '' : 's'}`;
 }
 
