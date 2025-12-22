@@ -18,7 +18,10 @@ const UNITS = Object.freeze({
 });
 
 function formatNumber(number, precision = null) {
-    let [before, after] = number.toFixed(precision).split('.');
+    if(typeof number === 'number') {
+        number = number.toFixed(precision);
+    }
+    let [before, after] = number.split('.');
     // https://stackoverflow.com/questions/2901102/how-can-i-format-a-number-with-commas-as-thousands-separators
     const beforeWithComma = before.replace(
         /\B(?=(\d{3})+(?!\d))/g,
