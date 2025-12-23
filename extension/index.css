@@ -1,17 +1,31 @@
 html,
 body {
-	--bg: #222;
-	--fg: #eee;
-	--fg-accent: #aaf;
-	--fg-dark: #88d;
-	margin: 0;
-	padding: 0;
+	--bg-dark: hsl(0, 0%, 0%);
+	--bg: hsl(0, 0%, 5%);
+	--bg-light: hsl(0, 0%, 10%);
+	--border: hsl(0, 0%, 40%);
+	--text-muted: hsl(0, 0%, 70%);
+	--text: hsl(0, 0%, 95%);
+
+	--fg-accent: hsl(235, 100%, 70%);
+	--fg-accent-dark: hsl(0, 100%, 40%);
+
+	background: var(--bg-dark);
+	color: var(--text);
+
+	@media (prefers-color-scheme: light) {
+		--bg-dark: hsl(0, 0%, 85%);
+		--bg: hsl(0, 0%, 90%);
+		--bg-light: hsl(0, 0%, 95%);
+		--border: hsl(0, 0%, 60%);
+		--text-muted: hsl(0, 0%, 20%);
+		--text: hsl(0, 0%, 10%);
+
+	}
 }
 
 body {
 	padding: 1rem;
-	background: var(--bg);
-	color: var(--fg);
 	width: 40rem;
 }
 
@@ -28,21 +42,30 @@ li {
 	grid-template-columns: 3fr 2fr 0.3fr 1fr 1fr 1fr;
 }
 
+input,
+button {
+	color: var(--fg);
+	background: var(--bg);
+	border: 1px solid var(--border);
+	border-radius: 0.5em;
+}
+
 button {
 	cursor: pointer;
 }
 
 button:disabled {
-	opacity: 0.5;
+	opacity: 0.2;
 	cursor: default;
 }
 
-a {
+a:link {
 	color: var(--fg-accent);
 }
 
+/* I'm thinking this doesn't work because the DOM is regenerated everytime. */
 a:visited {
-	color: var(--fg-accent-dark);
+	color: var(--fg-accent-dark) !important;
 }
 
 .center-child {
