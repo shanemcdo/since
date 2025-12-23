@@ -42,7 +42,7 @@ a {
 }
 
 a:visited {
-	color var(--fg-accent-dark);
+	color: var(--fg-accent-dark);
 }
 
 .center-child {
