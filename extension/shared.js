@@ -4,7 +4,7 @@ const HOUR   = 60  * MINUTE;
 const DAY    = 24  * HOUR;
 const WEEK   = 7   * DAY;
 const MONTH  = 31  * DAY;
-const YEAR   = 365 * DAY;
+const YEAR   = 365.25 * DAY;
 
 const UNITS = Object.freeze({
     'millisecond': 1,
@@ -16,6 +16,10 @@ const UNITS = Object.freeze({
     'month': MONTH,
     'year': YEAR,
 });
+
+function divmod(a, b) {
+    return [Math.floor(a / b), a % b];
+}
 
 function formatNumber(number, precision = null) {
     if(typeof number === 'number') {

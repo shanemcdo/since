@@ -78,15 +78,15 @@ function main(){
         const diff = Math.abs(now - date);
         switch(els.units.value) {
         case 'mix':
-            const time = {
-                year: Math.floor(diff / YEAR),
-                week: Math.floor(diff / WEEK) % 52,
-                day: Math.floor(diff / DAY) % 7,
-                hour: Math.floor(diff / HOUR) % 24,
-                minute: Math.floor(diff / MINUTE) % 60,
-                second: Math.floor(diff / SECOND) % 60,
-                milisecond: diff % SECOND,
-            };
+            const time = {};
+            let rest = diff;
+            [time.year, rest] = divmod(rest, YEAR);
+            [time.week, rest] = divmod(rest, WEEK);
+            [time.day, rest] = divmod(rest, DAY);
+            [time.hour, rest] = divmod(rest, HOUR);
+            [time.minute, rest] = divmod(rest, MINUTE);
+            [time.second, rest] = divmod(rest, SECOND);
+            time.millisecond = rest;
             els.dateOut.innerHTML = Object.entries(time)
                 .filter(([, value]) => value !== 0)
                 .map(([unit, value]) => (in_future ? '-' : '') + getTimeString(value, unit))
