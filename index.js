@@ -75,6 +75,7 @@ function main(){
         date = new Date(els.datePickerOut.value);
         const now = Date.now()
         const in_future = now < date - 0;
+        const sign = in_future ? '-' : '';
         const diff = Math.abs(now - date);
         switch(els.units.value) {
         case 'mix':
@@ -89,7 +90,7 @@ function main(){
             time.millisecond = rest;
             els.dateOut.innerHTML = Object.entries(time)
                 .filter(([, value]) => value !== 0)
-                .map(([unit, value]) => (in_future ? '-' : '') + getTimeString(value, unit))
+                .map(([unit, value]) => sign + getTimeString(value, unit))
                 .join('<br>');
             break;
         case 'year':
@@ -100,10 +101,10 @@ function main(){
         case 'minute':
         case 'second':
         case 'millisecond':
-            els.dateOut.innerHTML = getTimeString(diff / UNITS[els.units.value], els.units.value, 6);
+            els.dateOut.innerHTML = sign + getTimeString(diff / UNITS[els.units.value], els.units.value, 6);
             break;
         case 'largest':
-            els.dateOut.innerHTML = msToHuman(diff, 6);
+            els.dateOut.innerHTML = sign + msToHuman(diff, 6);
             break;
         default:
             console.error(`Unexpected unit: "${els.units.value}"`);
