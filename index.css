@@ -1,7 +1,26 @@
 :root{
-    background: #190019;
-    color: #efdcef;
+    --hue: 278;
+    --sat: 50%;
+    --bg-dark: hsl(var(--hue), var(--sat), 5%);
+    --bg: hsl(var(--hue), var(--sat), 15%);
+    --bg-light: hsl(var(--hue), var(--sat), 25%);
+    --border: hsl(var(--hue), var(--sat), 45%);
+    --text-muted: hsl(var(--hue), var(--sat), 80%);
+    --text: hsl(var(--hue), var(--sat), 95%);
+    background: var(--bg-dark);
+    color: var(--text);
     font-family: 'Roboto', sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg-dark: hsl(var(--hue), var(--sat), 85%);
+        --bg: hsl(var(--hue), var(--sat), 90%);
+        --bg-light: hsl(var(--hue), var(--sat), 95%);
+        --border: hsl(var(--hue), var(--sat), 60%);
+        --text-muted: hsl(var(--hue), var(--sat), 20%);
+        --text: hsl(var(--hue), var(--sat), 10%);
+    }
 }
 
 html{
@@ -12,13 +31,20 @@ html{
     text-align: center;
 }
 
-a{
-    color: #cc5dfb;
+button,
+select,
+input {
+    background: var(--bg);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 0.4rem;
 }
 
-a:visited{
-    color: #905dfb;
+label,
+p {
+    color: var(--text-muted);
 }
+
 
 .hidden{
     display: none;
