@@ -46,25 +46,25 @@ function showHideDateIn(){
 }
 
 function wrapTime(time, unit, sign = '', precision = null, custom_class = '') {
-	let value_class = 'timevalue';
-	time = formatNumber(time, precision);
-	let need_plural = true;
-	if(unit.length > 6) { // too long to fit in box
-		need_plural = SHORT_UNITS_PLURAL[unit];
-		unit = SHORT_UNITS[unit];
-	}
-	if(need_plural && time !== 1 && time !== '1.0') {
-		unit = unit + 's'; // so as not to modify string
-	}
-	return `<div class="timeblock ${custom_class}">
+    let value_class = 'timevalue';
+    time = formatNumber(time, precision);
+    let need_plural = true;
+    if(unit.length > 6) { // too long to fit in box
+        need_plural = SHORT_UNITS_PLURAL[unit];
+        unit = SHORT_UNITS[unit];
+    }
+    if(need_plural && time !== 1 && time !== '1.0') {
+        unit = unit + 's'; // so as not to modify string
+    }
+    return `<div class="timeblock ${custom_class}">
 <span class="${value_class}">${sign}${time}</span>
 <span class="timeunit">${unit}</span>
 </div>`;
 }
 
 function wrapLargest(time, sign = '', precision = null, custom_class = '') {
-	const unit = getLargestUnit(time);
-	return wrapTime(time / UNITS[unit], unit, sign, precision, custom_class);
+    const unit = getLargestUnit(time);
+    return wrapTime(time / UNITS[unit], unit, sign, precision, custom_class);
 }
 
 function main(){
@@ -124,12 +124,12 @@ function main(){
         case 'second':
         case 'millisecond':
             els.dateOut.innerHTML = wrapTime(
-				diff / UNITS[els.units.value],
-				els.units.value,
-				sign,
-				6,
-				'wide3'
-			);
+                diff / UNITS[els.units.value],
+                els.units.value,
+                sign,
+                6,
+                'wide3'
+            );
             break;
         case 'largest':
             els.dateOut.innerHTML = wrapLargest(diff, sign, 6, 'wide3');

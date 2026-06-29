@@ -68,18 +68,18 @@ function getTimeString(time, unit, precision = null){
 }
 
 function msToHuman(ms, precision = 1) {
-	const abs = Math.abs(ms);
-	const unit = getLargestUnit(abs);
-	return (ms < 0 ? '-' : ' ') + getTimeString(
-		(abs / UNITS[unit]).toFixed(precision),
-		unit
-	);
+    const abs = Math.abs(ms);
+    const unit = getLargestUnit(abs);
+    return (ms < 0 ? '-' : ' ') + getTimeString(
+        (abs / UNITS[unit]).toFixed(precision),
+        unit
+    );
 };
 
 function getLargestUnit(ms) {
-	for(const [key, val] of Object.entries(UNITS).reverse()) {
-		if(ms > val) return key;
-	}
-	return 'Milisecond';
+    for(const [key, val] of Object.entries(UNITS).reverse()) {
+        if(ms > val) return key;
+    }
+    return 'Milisecond';
 }
 
