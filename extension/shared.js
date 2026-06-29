@@ -83,3 +83,10 @@ function msToHuman(ms, precision = 1) {
     return (ms < 0 ? '-' : ' ') + func();
 };
 
+function getLargestUnit(ms) {
+	for(const [key, val] of Object.entries(UNITS).reverse()) {
+		if(ms > val) return key;
+	}
+	return 'Milisecond';
+}
+
