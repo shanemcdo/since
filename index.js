@@ -45,6 +45,22 @@ function showHideDateIn(){
     }
 }
 
+function wrapTime(time, unit, sign = '', precision = null) {
+	time = formatNumber(time, precision);
+	let need_plural = true;
+	if(unit.length > 6) { // too long to fit in box
+		need_plural = SHORT_UNITS_PLURAL[unit];
+		unit = SHORT_UNITS[unit];
+	}
+	if(need_plural && time !== 1 && time !== '1.0') {
+		unit = unit + 's'; // so as not to modify string
+	}
+	return `<div class="timeblock">
+<span class="timevalue">${sign}${time}</span>
+<span class="timeunit">${unit}</span>
+</div>`;
+}
+
 function main(){
     // needed when reversing back into page
     // checkbox might be unchecked
@@ -90,8 +106,8 @@ function main(){
             time.millisecond = rest;
             els.dateOut.innerHTML = Object.entries(time)
                 .filter(([, value]) => value !== 0)
-                .map(([unit, value]) => sign + getTimeString(value, unit))
-                .join('<br>');
+                .map(([unit, value]) => wrapTime(value, unit, sign))
+                .join('');
             break;
         case 'year':
         case 'month':

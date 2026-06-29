@@ -17,6 +17,31 @@ const UNITS = Object.freeze({
     'year': YEAR,
 });
 
+const SHORT_UNITS = Object.freeze({
+    'millisecond': 'ms',
+    'second': 's',
+    'min': 'min',
+    'hr': 'hr',
+    'day': 'day',
+    'week': 'wk',
+    'month': 'mth',
+    'year': 'yr',
+});
+
+// Whether or not the short unit version needs an s added to the end
+// true if requires s
+// false if not
+const SHORT_UNITS_PLURAL = Object.freeze({
+    'millisecond': false,
+    'second': false,
+    'min': true,
+    'hr': true,
+    'day': true,
+    'week': true,
+    'month': true,
+    'year': true,
+});
+
 function divmod(a, b) {
     return [Math.floor(a / b), a % b];
 }
