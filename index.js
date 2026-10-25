@@ -74,7 +74,7 @@ function setTitle(name) {
 function main(){
 	// needed when reversing back into page
 	// checkbox might be unchecked
-	setTimeout(showHideDateIn, 100); 
+	setTimeout(showHideDateIn, 100);
 	if(url.search === '') return;
 	const name = url.searchParams.get('name');
 	els.inDiv.classList.add('hidden');
@@ -87,7 +87,7 @@ function main(){
 	};
 	setTitle(name);
 	let date = new Date(parseInt(url.searchParams.get('date')));
-	const updateURL = () => 
+	const updateURL = () =>
 		window.history.pushState({ path: url.toString() }, '', url.toString());
 	els.datePickerOut.value = convertISODate(date);
 	els.datePickerOut.onchange = () => {

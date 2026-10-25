@@ -28,7 +28,7 @@ function setUpButton(hasBookmark) {
 	if(hasBookmark) {
 		createRemoveBookmarkButton.innerText = 'Remove Bookmark';
 		createRemoveBookmarkButton.onclick = removeBookmark;
-	} else { 
+	} else {
 		createRemoveBookmarkButton.innerText = 'Create Bookmark';
 		createRemoveBookmarkButton.onclick = async () => {
 			bookmarkId = await chrome.runtime.sendMessage({ type: 'create', url: window.location.href });

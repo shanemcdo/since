@@ -11,7 +11,7 @@ const BASE_URL = 'shanemcd.net/since/';
 const BOOKMARK_FOLDER_TITLE = '"Since" Extension Bookmarks';
 let extension_folder_id = null;
 
-async function get_extension_folder_id() { 
+async function get_extension_folder_id() {
 	const results = await chrome.bookmarks.search({ title: BOOKMARK_FOLDER_TITLE });
 	if(results.length > 0) {
 		return results[0].id;
@@ -55,7 +55,7 @@ function getList(folderName, bookmarkList) {
 function addTimerToList(id, url, oldLi = null, oldPreviousTimes = null, bookmarkList = null, timerName = null) {
 	let list = bookmarkList ?? els.bookmarkList
 	let name = timerName ?? url.searchParams.get('name');
-	if(name.includes('/')) { 
+	if(name.includes('/')) {
 		const [folder, ...rest] = name.split('/');
 		return addTimerToList(
 			id,
@@ -184,7 +184,7 @@ els.searchInput.addEventListener('keyup', event => {
 });
 
 els.timerNameInput.addEventListener('keydown', event => {
-	if(event.keyCode == 13) { // Enter 
+	if(event.keyCode == 13) { // Enter
 		els.newTimerButton.click();
 	}
 });
