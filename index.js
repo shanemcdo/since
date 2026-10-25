@@ -67,6 +67,10 @@ function wrapLargest(time, sign = '', precision = null, custom_class = '') {
     return wrapTime(time / UNITS[unit], unit, sign, precision, custom_class);
 }
 
+function setTitle(name) {
+    document.title = `since "${name}"`;
+}
+
 function main(){
     // needed when reversing back into page
     // checkbox might be unchecked
@@ -75,8 +79,13 @@ function main(){
     const name = url.searchParams.get('name');
     els.inDiv.classList.add('hidden');
     els.outDiv.classList.remove('hidden');
-    els.nameOut.innerHTML = name;
-    document.title = `since "${name}"`;
+    els.nameOut.value = name;
+    els.nameOut.onchange = () => {
+        url.searchParams.set('name', els.nameOut.value);
+        setTitle(els.nameOut.value);
+        updateURL();
+    };
+    setTitle(name);
     let date = new Date(parseInt(url.searchParams.get('date')));
     const updateURL = () => 
         window.history.pushState({ path: url.toString() }, '', url.toString());
