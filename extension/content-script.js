@@ -1,5 +1,6 @@
 const createRemoveBookmarkButton = document.getElementById('create-remove-bookmark');
 const resetButton = document.getElementById('reset-button');
+const nameOut = document.getElementById('name-out');
 const datePickerOut = document.getElementById('datepicker-out');
 const unitSelect = document.getElementById('units');
 createRemoveBookmarkButton.classList.remove('hidden');
@@ -53,6 +54,12 @@ resetButton.onclick = async () => {
 	await updateBookmark(url);
 	window.location.href = url.toString();
 }
+nameOut.onchange = async () => {
+	let url = new URL(window.location);
+    url.searchParams.set('name', nameOut.value);
+    window.history.pushState({ path: url.toString() }, '', url.toString());
+	await updateBookmark(url);
+};
 datePickerOut.onchange = async () => {
 	let url = new URL(window.location);
 	console.log(datePickerOut.value);
