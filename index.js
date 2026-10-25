@@ -1,154 +1,154 @@
 const els = {
-    nameIn: document.querySelector('#name-in'),
-    nameOut: document.querySelector('#name-out'),
-    dateOut: document.querySelector('#date-out'),
-    inDiv: document.querySelector('#in'),
-    outDiv: document.querySelector('#out'),
-    startNowCheckbox: document.querySelector('#start-now'),
-    datePickerIn: document.querySelector('#datepicker-in'),
-    datePickerOut: document.querySelector('#datepicker-out'),
-    units: document.querySelector('#units'),
+	nameIn: document.querySelector('#name-in'),
+	nameOut: document.querySelector('#name-out'),
+	dateOut: document.querySelector('#date-out'),
+	inDiv: document.querySelector('#in'),
+	outDiv: document.querySelector('#out'),
+	startNowCheckbox: document.querySelector('#start-now'),
+	datePickerIn: document.querySelector('#datepicker-in'),
+	datePickerOut: document.querySelector('#datepicker-out'),
+	units: document.querySelector('#units'),
 };
 
 const url = new URL(window.location);
 
 function startCounting(){
-    url.searchParams.set('name', els.nameIn.value);
-    const date = els.startNowCheckbox.checked ? Date.now() : (new Date(els.datePickerIn.value) - 0);
-    url.searchParams.set('date', date);
-    window.location.search = url.search;
+	url.searchParams.set('name', els.nameIn.value);
+	const date = els.startNowCheckbox.checked ? Date.now() : (new Date(els.datePickerIn.value) - 0);
+	url.searchParams.set('date', date);
+	window.location.search = url.search;
 }
 
 function resetCount(){
-    url.searchParams.set('date', Date.now());
-    window.location.search = url.search;
+	url.searchParams.set('date', Date.now());
+	window.location.search = url.search;
 }
 
 function convertISODate(date) {
-    return new Date(
-        // shift based on timezone
-        date - new Date(date).getTimezoneOffset() * 60 * 1000
-    // convert to yyyy-MM-ddThh:mm:ss.SSSZ format
-    ).toISOString()
-    // cut off seconds, miliseconds, and Z on end of string
-    // the Z indicates ISO and that is not accepted by datetime-local
-    .substr(0, 16);
+	return new Date(
+		// shift based on timezone
+		date - new Date(date).getTimezoneOffset() * 60 * 1000
+	// convert to yyyy-MM-ddThh:mm:ss.SSSZ format
+	).toISOString()
+	// cut off seconds, miliseconds, and Z on end of string
+	// the Z indicates ISO and that is not accepted by datetime-local
+	.substr(0, 16);
 }
 
 function showHideDateIn(){
-    els.datePickerIn.required = !els.startNowCheckbox.checked;
-    if(els.datePickerIn.required) {
-        els.datePickerIn.value = convertISODate(Date.now());
-        els.datePickerIn.classList.remove('hidden');
-    } else {
-        els.datePickerIn.classList.add('hidden');
-    }
+	els.datePickerIn.required = !els.startNowCheckbox.checked;
+	if(els.datePickerIn.required) {
+		els.datePickerIn.value = convertISODate(Date.now());
+		els.datePickerIn.classList.remove('hidden');
+	} else {
+		els.datePickerIn.classList.add('hidden');
+	}
 }
 
 function wrapTime(time, unit, sign = '', precision = null, custom_class = '') {
-    let value_class = 'timevalue';
-    time = formatNumber(time, precision);
-    let need_plural = true;
-    if(unit.length > 6) { // too long to fit in box
-        need_plural = SHORT_UNITS_PLURAL[unit];
-        unit = SHORT_UNITS[unit];
-    }
-    if(need_plural && time !== 1 && time !== '1.0') {
-        unit = unit + 's'; // so as not to modify string
-    }
-    return `<div class="timeblock ${custom_class}">
+	let value_class = 'timevalue';
+	time = formatNumber(time, precision);
+	let need_plural = true;
+	if(unit.length > 6) { // too long to fit in box
+		need_plural = SHORT_UNITS_PLURAL[unit];
+		unit = SHORT_UNITS[unit];
+	}
+	if(need_plural && time !== 1 && time !== '1.0') {
+		unit = unit + 's'; // so as not to modify string
+	}
+	return `<div class="timeblock ${custom_class}">
 <span class="${value_class}">${sign}${time}</span>
 <span class="timeunit">${unit}</span>
 </div>`;
 }
 
 function wrapLargest(time, sign = '', precision = null, custom_class = '') {
-    const unit = getLargestUnit(time);
-    return wrapTime(time / UNITS[unit], unit, sign, precision, custom_class);
+	const unit = getLargestUnit(time);
+	return wrapTime(time / UNITS[unit], unit, sign, precision, custom_class);
 }
 
 function setTitle(name) {
-    document.title = `since "${name}"`;
+	document.title = `since "${name}"`;
 }
 
 function main(){
-    // needed when reversing back into page
-    // checkbox might be unchecked
-    setTimeout(showHideDateIn, 100); 
-    if(url.search === '') return;
-    const name = url.searchParams.get('name');
-    els.inDiv.classList.add('hidden');
-    els.outDiv.classList.remove('hidden');
-    els.nameOut.value = name;
-    els.nameOut.onchange = () => {
-        url.searchParams.set('name', els.nameOut.value);
-        setTitle(els.nameOut.value);
-        updateURL();
-    };
-    setTitle(name);
-    let date = new Date(parseInt(url.searchParams.get('date')));
-    const updateURL = () => 
-        window.history.pushState({ path: url.toString() }, '', url.toString());
-    els.datePickerOut.value = convertISODate(date);
-    els.datePickerOut.onchange = () => {
-        url.searchParams.set('date', new Date(els.datePickerOut.value) - 0);
-        updateURL();
-    };
-    els.units.onchange = () => {
-        url.searchParams.set('unit', els.units.value);
-        updateURL();
-    };
-    const unit = url.searchParams.get('unit');
-    if(unit) {
-        els.units.value = unit;
-    }
-    setInterval(() => {
-        date = new Date(els.datePickerOut.value);
-        const now = Date.now()
-        const in_future = now < date - 0;
-        const sign = in_future ? '-' : '';
-        const diff = Math.abs(now - date);
-        switch(els.units.value) {
-        case 'mix':
-            const time = {};
-            let rest = diff;
-            [time.year, rest] = divmod(rest, YEAR);
-            [time.week, rest] = divmod(rest, WEEK);
-            [time.day, rest] = divmod(rest, DAY);
-            [time.hour, rest] = divmod(rest, HOUR);
-            [time.minute, rest] = divmod(rest, MINUTE);
-            [time.second, rest] = divmod(rest, SECOND);
-            time.millisecond = rest;
-            els.dateOut.innerHTML = Object.entries(time)
-                .filter(([, value]) => value !== 0)
-                .map(([unit, value]) => wrapTime(value, unit, sign))
-                .join('');
-            break;
-        case 'year':
-        case 'month':
-        case 'week':
-        case 'day':
-        case 'hour':
-        case 'minute':
-        case 'second':
-        case 'millisecond':
-            els.dateOut.innerHTML = wrapTime(
-                diff / UNITS[els.units.value],
-                els.units.value,
-                sign,
-                6,
-                'wide3'
-            );
-            break;
-        case 'largest':
-            els.dateOut.innerHTML = wrapLargest(diff, sign, 6, 'wide3');
-            break;
-        default:
-            console.error(`Unexpected unit: "${els.units.value}"`);
-            els.units.value = 'mix';
-            break;
-        }
-    }, 100);
+	// needed when reversing back into page
+	// checkbox might be unchecked
+	setTimeout(showHideDateIn, 100); 
+	if(url.search === '') return;
+	const name = url.searchParams.get('name');
+	els.inDiv.classList.add('hidden');
+	els.outDiv.classList.remove('hidden');
+	els.nameOut.value = name;
+	els.nameOut.onchange = () => {
+		url.searchParams.set('name', els.nameOut.value);
+		setTitle(els.nameOut.value);
+		updateURL();
+	};
+	setTitle(name);
+	let date = new Date(parseInt(url.searchParams.get('date')));
+	const updateURL = () => 
+		window.history.pushState({ path: url.toString() }, '', url.toString());
+	els.datePickerOut.value = convertISODate(date);
+	els.datePickerOut.onchange = () => {
+		url.searchParams.set('date', new Date(els.datePickerOut.value) - 0);
+		updateURL();
+	};
+	els.units.onchange = () => {
+		url.searchParams.set('unit', els.units.value);
+		updateURL();
+	};
+	const unit = url.searchParams.get('unit');
+	if(unit) {
+		els.units.value = unit;
+	}
+	setInterval(() => {
+		date = new Date(els.datePickerOut.value);
+		const now = Date.now()
+		const in_future = now < date - 0;
+		const sign = in_future ? '-' : '';
+		const diff = Math.abs(now - date);
+		switch(els.units.value) {
+		case 'mix':
+			const time = {};
+			let rest = diff;
+			[time.year, rest] = divmod(rest, YEAR);
+			[time.week, rest] = divmod(rest, WEEK);
+			[time.day, rest] = divmod(rest, DAY);
+			[time.hour, rest] = divmod(rest, HOUR);
+			[time.minute, rest] = divmod(rest, MINUTE);
+			[time.second, rest] = divmod(rest, SECOND);
+			time.millisecond = rest;
+			els.dateOut.innerHTML = Object.entries(time)
+				.filter(([, value]) => value !== 0)
+				.map(([unit, value]) => wrapTime(value, unit, sign))
+				.join('');
+			break;
+		case 'year':
+		case 'month':
+		case 'week':
+		case 'day':
+		case 'hour':
+		case 'minute':
+		case 'second':
+		case 'millisecond':
+			els.dateOut.innerHTML = wrapTime(
+				diff / UNITS[els.units.value],
+				els.units.value,
+				sign,
+				6,
+				'wide3'
+			);
+			break;
+		case 'largest':
+			els.dateOut.innerHTML = wrapLargest(diff, sign, 6, 'wide3');
+			break;
+		default:
+			console.error(`Unexpected unit: "${els.units.value}"`);
+			els.units.value = 'mix';
+			break;
+		}
+	}, 100);
 }
 
 main();

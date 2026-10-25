@@ -1,58 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Since</title>
-        <meta name="viewport" content="width=device-width">
-        <link href="index.css" type="text/css" rel="stylesheet">
-        <script src="extension/shared.js" defer></script>
-        <script src="index.js" defer></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    </head>
-    <body>
-        <div class="center-child">
-            <div id="in">
-                <h1>Since</h1>
-                <p>
-                This site serves as a way of tracking how much time has passed <i>since</i> an event has occured.
-                You can use it to track days since last workplace accident.
-                You can use it as an addiction tracker.
-                Simply bookmark this page and update the bookmark whenever you reset the count.
-                <!-- TODO get on extension store and link install -->
-                </p>
-                <form action="javascript:startCounting()">
-                    <label for="start-now">start now</label>
-                    <input type="checkbox" id="start-now" oninput="showHideDateIn()" checked/>
-                    <br>
-                    <input type="datetime-local" id="datepicker-in" class="hidden"/>
-                    <input type="text" id="name-in" placeholder="Name" required/>
-                    <button type="submit">Start Counting</button>
-                </form>
-            </div>
-            <div class="hidden" id="out">
-                <input id="name-out"></input>
-                <br>
-                <label for="units">Units:</label>
-                <select id="units" value="mix">
-                    <option value="mix">Mix</option>
-                    <option value="year">Years</option>
-                    <option value="month">Months (30 days)</option>
-                    <option value="week">Weeks</option>
-                    <option value="day">Days</option>
-                    <option value="hour">Hours</option>
-                    <option value="minute">Minutes</option>
-                    <option value="second">Seconds</option>
-                    <option value="millisecond">Miliseconds</option>
-                    <option value="largest">Largest Whole Number</option>
-                </select>
-                <div id="date-out"></div>
-                <input type="datetime-local" id="datepicker-out" />
-                <button id="reset-button" onclick="resetCount()">Reset Count</button>
-                <button id="create-remove-bookmark" class="hidden"></button>
-                <br>
-                <a href="./">Home Site</a>
-            </div>
-        </div>
-    </body>
+	<head>
+		<title>Since</title>
+		<meta name="viewport" content="width=device-width">
+		<link href="index.css" type="text/css" rel="stylesheet">
+		<script src="extension/shared.js" defer></script>
+		<script src="index.js" defer></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<div class="center-child">
+			<div id="in">
+				<h1>Since</h1>
+				<p>
+				This site serves as a way of tracking how much time has passed <i>since</i> an event has occured.
+				You can use it to track days since last workplace accident.
+				You can use it as an addiction tracker.
+				Simply bookmark this page and update the bookmark whenever you reset the count.
+				<!-- TODO get on extension store and link install -->
+				</p>
+				<form action="javascript:startCounting()">
+					<label for="start-now">start now</label>
+					<input type="checkbox" id="start-now" oninput="showHideDateIn()" checked/>
+					<br>
+					<input type="datetime-local" id="datepicker-in" class="hidden"/>
+					<input type="text" id="name-in" placeholder="Name" required/>
+					<button type="submit">Start Counting</button>
+				</form>
+			</div>
+			<div class="hidden" id="out">
+				<input id="name-out"></input>
+				<br>
+				<label for="units">Units:</label>
+				<select id="units" value="mix">
+					<option value="mix">Mix</option>
+					<option value="year">Years</option>
+					<option value="month">Months (30 days)</option>
+					<option value="week">Weeks</option>
+					<option value="day">Days</option>
+					<option value="hour">Hours</option>
+					<option value="minute">Minutes</option>
+					<option value="second">Seconds</option>
+					<option value="millisecond">Miliseconds</option>
+					<option value="largest">Largest Whole Number</option>
+				</select>
+				<div id="date-out"></div>
+				<input type="datetime-local" id="datepicker-out" />
+				<button id="reset-button" onclick="resetCount()">Reset Count</button>
+				<button id="create-remove-bookmark" class="hidden"></button>
+				<br>
+				<a href="./">Home Site</a>
+			</div>
+		</div>
+	</body>
 </html>

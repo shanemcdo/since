@@ -44,33 +44,33 @@ async function updateBookmark(url) {
 }
 
 function resetCount(url, date = null){
-    if(date === null) date = Date.now();
+	if(date === null) date = Date.now();
 }
 
 hasBookmark().then(setUpButton);
 resetButton.onclick = async () => {
 	let url = new URL(window.location);
-    url.searchParams.set('date', Date.now());
+	url.searchParams.set('date', Date.now());
 	await updateBookmark(url);
 	window.location.href = url.toString();
 }
 nameOut.onchange = async () => {
 	let url = new URL(window.location);
-    url.searchParams.set('name', nameOut.value);
-    window.history.pushState({ path: url.toString() }, '', url.toString());
+	url.searchParams.set('name', nameOut.value);
+	window.history.pushState({ path: url.toString() }, '', url.toString());
 	await updateBookmark(url);
 };
 datePickerOut.onchange = async () => {
 	let url = new URL(window.location);
 	console.log(datePickerOut.value);
-    url.searchParams.set('date', new Date(datePickerOut.value) - 0);
-    window.history.pushState({ path: url.toString() }, '', url.toString());
+	url.searchParams.set('date', new Date(datePickerOut.value) - 0);
+	window.history.pushState({ path: url.toString() }, '', url.toString());
 	await updateBookmark(url);
 };
 unitSelect.onchange = async () => {
 	let url = new URL(window.location);
-    url.searchParams.set('unit', unitSelect.value);
-    window.history.pushState({ path: url.toString() }, '', url.toString());
+	url.searchParams.set('unit', unitSelect.value);
+	window.history.pushState({ path: url.toString() }, '', url.toString());
 	await updateBookmark(url);
 };
 
