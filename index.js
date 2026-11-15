@@ -30,9 +30,9 @@ function convertISODate(date) {
 		date - new Date(date).getTimezoneOffset() * 60 * 1000
 	// convert to yyyy-MM-ddThh:mm:ss.SSSZ format
 	).toISOString()
-	// cut off seconds, miliseconds, and Z on end of string
+	// cut off miliseconds and Z on end of string
 	// the Z indicates ISO and that is not accepted by datetime-local
-	.substr(0, 16);
+	.substr(0, 19);
 }
 
 function showHideDateIn(){
