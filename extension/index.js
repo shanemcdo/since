@@ -1,10 +1,14 @@
 const els = {
-	bookmarkList: document.getElementById('bookmark-list'),
-	searchInput: document.getElementById('search'),
-	timerNameInput: document.getElementById('timer-name'),
-	newTimerButton: document.getElementById('new-timer-button'),
-	sortDateButton: document.getElementById('sort-date-button'),
-	sortNameButton: document.getElementById('sort-name-button'),
+	bookmarkList:    document.getElementById('bookmark-list'),
+	searchInput:     document.getElementById('search'),
+	timerNameInput:  document.getElementById('timer-name'),
+	newTimerButton:  document.getElementById('new-timer-button'),
+	sortDateButton:  document.getElementById('sort-date-button'),
+	sortNameButton:  document.getElementById('sort-name-button'),
+	exportButton:    document.getElementById('export-button'),
+	importButton:    document.getElementById('import-button'),
+	importFileInput: document.getElementById('import-file'),
+	downloadAnchor:  document.getElementById('download-anchor'),
 };
 
 const BASE_URL = 'shanemcd.net/since/';
@@ -161,13 +165,28 @@ function sortBookmarks(sort_func) {
 		.forEach(li => els.bookmarkList.appendChild(li));
 }
 
-els.newTimerButton.onclick = async () => {
-	if(els.timerNameInput.value === '') return;
+function downloadJSON(jsonObject) { 
+	// Source - https://stackoverflow.com/a/30800715
+	// Posted by mlimper, modified by community. See post 'Timeline' for change history
+	// Retrieved 2026-11-17, License - CC BY-SA 4.0
+	const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonObject));
+	els.downloadAnchor.setAttribute("href",     dataStr     );
+	els.downloadAnchor.setAttribute("download", "since_bookmarks.json");
+	els.downloadAnchor.click();
+}
+
+async function newTimer(name, date, locked) {
 	const url = new URL('https://' + BASE_URL);
-	url.searchParams.set('name', els.timerNameInput.value);
-	url.searchParams.set('date', Date.now());
+	url.searchParams.set('name', name);
+	url.searchParams.set('date', date);
+	url.searchParams.set('locked', locked);
 	const bookmark = await createBookmark(url);
 	addTimerToList(bookmark.id, url);
+}
+
+els.newTimerButton.onclick = async () => {
+	if(els.timerNameInput.value === '') return;
+	newTimer(els.timerNameInput.value, Date.now(), false);
 	els.timerNameInput.value = '';
 };
 
@@ -209,5 +228,31 @@ els.sortNameButton.onclick = () => {
 	els.bookmarkList.innerHTML = '';
 	fillBookmarks(sort_url_func);
 };
+
+els.exportButton.onclick = () => {
+	downloadJSON();
+	chrome.bookmarks.search({ query: BASE_URL }, results => {
+		downloadJSON(results.map(result => {
+			const params = new URL(result.url).searchParams;
+			return {
+				name: params.get('name'),
+				date: params.get('date'),
+				locked: params.get('locked') ?? 'false',
+			};
+			}));
+		});
+	};
+
+els.importButton.onclick = () => {
+	const reader = new FileReader();
+	reader.onload = e => {
+		const bookmarks = JSON.parse(e.target.result);
+		for(const {name, date, locked} of bookmarks) {
+			newTimer(name, date, locked);
+		}
+	};
+	const file = els.importFileInput.files[0];
+	reader.readAsText(file);
+}
 
 fillBookmarks(sort_url_func);
