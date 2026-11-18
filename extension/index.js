@@ -165,13 +165,13 @@ function sortBookmarks(sort_func) {
 		.forEach(li => els.bookmarkList.appendChild(li));
 }
 
-function downloadJSON(jsonObject) { 
+function downloadJSON(filename, jsonObject) { 
 	// Source - https://stackoverflow.com/a/30800715
 	// Posted by mlimper, modified by community. See post 'Timeline' for change history
 	// Retrieved 2026-11-17, License - CC BY-SA 4.0
 	const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonObject));
-	els.downloadAnchor.setAttribute("href",     dataStr     );
-	els.downloadAnchor.setAttribute("download", "since_bookmarks.json");
+	els.downloadAnchor.setAttribute("href",     dataStr);
+	els.downloadAnchor.setAttribute("download", filename);
 	els.downloadAnchor.click();
 }
 
@@ -182,6 +182,18 @@ async function newTimer(name, date, locked) {
 	url.searchParams.set('locked', locked);
 	const bookmark = await createBookmark(url);
 	addTimerToList(bookmark.id, url);
+}
+
+function getDateString(date) {
+	let month = date.getMonth() + 1;
+	if(month < 10) month = '0' + month;
+	let day = date.getDate();
+	if(day < 10) day = '0' + day;
+	let hour = date.getHours();
+	if(hour < 10) hour = '0' + hour;
+	let minute = date.getMinutes();
+	if(minute < 10) minute = '0' + minute;
+	return `${date.getFullYear()}${month}${day}_${hour}${minute}`;
 }
 
 els.newTimerButton.onclick = async () => {
@@ -230,9 +242,9 @@ els.sortNameButton.onclick = () => {
 };
 
 els.exportButton.onclick = () => {
-	downloadJSON();
+	const dateString = getDateString(new Date());
 	chrome.bookmarks.search({ query: BASE_URL }, results => {
-		downloadJSON(results.map(result => {
+		downloadJSON(`since_bookmarks_${dateString}.json`, results.map(result => {
 			const params = new URL(result.url).searchParams;
 			return {
 				name: params.get('name'),
